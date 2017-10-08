@@ -114,12 +114,14 @@ export class Chat extends React.Component<ChatProps, {}> {
                 key = inputtableKey(evt.key);
             }
 
-            this.shellRef.focus(key);
+            if(this.shellRef){
+                this.shellRef.focus(key);
+            }
         }
     }
 
     private saveShellRef(shellWrapper: any) {
-        this.shellRef = shellWrapper.getWrappedInstance();
+        this.shellRef = shellWrapper ? shellWrapper.getWrappedInstance() : null;
     }
 
     componentDidMount() {
