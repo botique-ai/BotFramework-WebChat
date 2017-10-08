@@ -1,4 +1,4 @@
-import { Activity, ConnectionStatus, IBotConnection, Media, MediaType, Message, User } from 'botframework-directlinejs';
+import { Activity, ConnectionStatus, IBotConnection, Media, MediaType, Message, User, ActivitySet } from '@botique/botframework-directlinejs';
 import { strings, defaultStrings, Strings } from './Strings';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Speech } from './SpeechModule';
@@ -268,9 +268,16 @@ export interface HistoryState {
     clientActivityCounter: number,
     selectedActivity: Activity,
     lastSubmittedActivityId: string,
+    isLoadingHistory: boolean,
 }
 
 export type HistoryAction = {
+    type: 'Get_History' | 'Get_History_Try'
+    limit: number,
+} | {
+    type: 'Get_History_Succeed' | 'Get_History_Fail'
+    activitySet: ActivitySet,
+} | {
     type: 'Receive_Message' | 'Send_Message' | 'Show_Typing' | 'Receive_Sent_Message'
     activity: Activity
 } | {
@@ -304,11 +311,34 @@ export const history: Reducer<HistoryState> = (
         clientActivityCounter: 0,
         selectedActivity: null,
         lastSubmittedActivityId: null,
+        isLoadingHistory: false,
     },
     action: HistoryAction
 ) => {
     konsole.log("history action", action);
     switch (action.type) {
+        case 'Get_History_Try': {
+            return{
+                ...state,
+                isLoadingHistory: true,
+            }
+        }
+        case 'Get_History_Succeed': {
+            // Merge the arrays uniquely
+            return{
+                ...state,
+                isLoadingHistory: false,
+                activities: [
+                    ...(action.activitySet.activities)
+                        .filter((curr) => !state.activities.find((el) => el.channelData.clientActivityId === curr.channelData.clientActivityId)), ...state.activities]
+            }
+        }
+        case 'Get_History_Fail': {
+            return{
+                ...state,
+                isLoadingHistory: false,
+            }
+        }
         case 'Receive_Sent_Message': {
             if (!action.activity.channelData || !action.activity.channelData.clientActivityId) {
                 // only postBack messages don't have clientActivityId, and these shouldn't be added to the history
@@ -489,6 +519,21 @@ import 'rxjs/add/observable/bindCallback';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/of';
 
+const getHistoryEpic: Epic<ChatActions, ChatState> = (action$, store) =>
+    action$.ofType('Get_History')
+    .map(({limit}) => {
+        return ({ type: 'Get_History_Try', limit } as HistoryAction);
+    });
+
+const tryGetHistoryEpic: Epic<any, ChatState> = (action$, store) =>
+    action$.ofType('Get_History_Try')
+    .flatMap(({limit}) => {
+        const state = store.getState();
+        const since = state.history.activities.length > 0 ? new Date(state.history.activities[0].timestamp) : new Date();
+        return state.connection.botConnection.getHistory(since, limit)
+        .map(activitySet => ({ type: 'Get_History_Succeed', activitySet } as HistoryAction))
+        .catch(error => Observable.of({ type: 'Get_History_Fail' } as HistoryAction))
+    });
 
 const sendMessageEpic: Epic<ChatActions, ChatState> = (action$, store) =>
     action$.ofType('Send_Message')
@@ -650,6 +695,8 @@ export const createStore = () =>
         }),
         applyMiddleware(createEpicMiddleware(combineEpics(
             updateSelectedActivityEpic,
+            getHistoryEpic,
+            tryGetHistoryEpic,
             sendMessageEpic,
             trySendMessageEpic,
             retrySendMessageEpic,
