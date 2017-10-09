@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes } from '@botique/botframework-directlinejs';
+import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes, GeneralEventType } from '@botique/botframework-directlinejs';
 import { createStore, ChatActions, sendMessage } from './Store';
 import { Provider } from 'react-redux';
 import { SpeechOptions } from './SpeechOptions';
@@ -24,6 +24,7 @@ export interface ChatProps {
     selectedActivity?: BehaviorSubject<ActivityOrID>,
     sendTyping?: boolean,
     formatOptions?: FormatOptions,
+    newConversationAutoMessage?: string,
     resize?: 'none' | 'window' | 'detect'
 }
 
@@ -37,6 +38,7 @@ export class Chat extends React.Component<ChatProps, {}> {
 
     private botConnection: IBotConnection;
 
+    private generalEventsSubscription: Subscription;
     private activitySubscription: Subscription;
     private connectionStatusSubscription: Subscription;
     private selectedActivitySubscription: Subscription;
@@ -166,11 +168,21 @@ export class Chat extends React.Component<ChatProps, {}> {
                 });
             });
         }
+
+        if(this.props.newConversationAutoMessage){
+            this.generalEventsSubscription = botConnection.generalEvents$.subscribe(event => {
+                if(event === GeneralEventType.InitConversationNew){
+                    this.store.dispatch(sendMessage(this.props.newConversationAutoMessage, this.props.user, this.props.locale));
+                }
+            })
+        }
     }
 
     componentWillUnmount() {
         this.connectionStatusSubscription.unsubscribe();
         this.activitySubscription.unsubscribe();
+        if (this.generalEventsSubscription)
+            this.generalEventsSubscription.unsubscribe();
         if (this.selectedActivitySubscription)
             this.selectedActivitySubscription.unsubscribe();
         if (this.botConnection)
