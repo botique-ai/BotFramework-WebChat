@@ -175,6 +175,17 @@
         left: 0;
         position: absolute;
         right: 0;
+
+        // Handle multiline textbox
+        @for $i from 2 through ($max-shell-lines - 1) {
+            &.wc-lines-#{$i}{
+                height: ($consoleHeight + ($fontSize * $i));
+            }
+        }
+
+        &.wc-lines-max{
+            height: ($consoleHeight + ($fontSize * $max-shell-lines));
+        }        
     }
 
 /* views */
@@ -684,6 +695,12 @@
         bottom: 0;
         left: 18px;
         right: 72px;
+    }
+
+    .wc-measurer{
+        font-family: $fontFamily;
+        position: absolute;
+        visibility: hidden;
     }
 
     .wc-mic {

@@ -6,13 +6,15 @@ import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
 import { ChatActions, sendMessage, sendFiles } from './Store';
+import { MAX_SHELL_LINES } from './settings';
 
 interface Props {
     inputText: string,
     strings: Strings,
     listening: boolean,
+    lines: number;
 
-    onChangeText: (inputText: string) => void
+    onChangeText: (inputText: string, lines: number) => void
 
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
@@ -27,9 +29,15 @@ export interface ShellFunctions {
 class ShellContainer extends React.Component<Props, {}> implements ShellFunctions {
     private textInput: HTMLTextAreaElement;
     private fileInput: HTMLInputElement;
+    private widthMeasurer: HTMLSpanElement;
 
     constructor(props: Props) {
         super(props);
+    }
+
+    private measureLines(text: string){
+        this.widthMeasurer.textContent = text;
+        return (text.match(/\n/g) || []).length + Math.floor((this.widthMeasurer.scrollWidth) / this.textInput.scrollWidth) + 1;
     }
 
     private sendMessage() {
@@ -43,6 +51,11 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
             this.sendMessage();
             e.preventDefault();
         }
+    }
+
+    private onChangeText(val: string){
+        this.widthMeasurer.textContent = val;
+        this.props.onChangeText(val, this.measureLines(val));
     }
 
     private onClickSend() {
@@ -78,9 +91,9 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
 
     public focus(appendKey?: string) {
         this.textInput.focus();
-
+        const text = this.props.inputText + appendKey;
         if (appendKey) {
-            this.props.onChangeText(this.props.inputText + appendKey);
+            this.props.onChangeText(text, this.measureLines(text));
         }
     }
 
@@ -103,7 +116,7 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
         );
 
         return (
-            <div className={className}>
+            <div className={`${className} wc-lines-${(this.props.lines < MAX_SHELL_LINES) ? this.props.lines : 'max'}`}>
                 <input id="wc-upload-input" type="file" ref={ input => this.fileInput = input } multiple onChange={ () => this.onChangeFile() } />
                 <label className="wc-upload" htmlFor="wc-upload-input">
                     <svg>
@@ -111,12 +124,15 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
                     </svg>
                 </label>
                 <div className="wc-textbox">
+                    <span className="wc-measurer" ref={(span) => this.widthMeasurer = span} />
                     <textarea
+                    style={{width: '300px'}}
+                        wrap="soft"
                         className="wc-shellinput"
                         ref={ input => this.textInput = input }
                         autoFocus
                         value={ this.props.inputText }
-                        onChange={ _ => this.props.onChangeText(this.textInput.value)}
+                        onChange={ _ => this.onChangeText(this.textInput.value)}
                         onKeyPress={ e => this.onKeyPress(e) }
                         onFocus = {() => this.onTextInputFocus()}
                         placeholder={ this.props.listening ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder }
@@ -142,6 +158,7 @@ export const Shell = connect(
     (state: ChatState) => ({
         // passed down to ShellContainer
         inputText: state.shell.input,
+        lines: state.shell.lines,
         strings: state.format.strings,
         // only used to create helper functions below
         locale: state.format.locale,
@@ -149,7 +166,7 @@ export const Shell = connect(
         listening : state.shell.listening
     }), {
         // passed down to ShellContainer
-        onChangeText: (input: string) => ({ type: 'Update_Input', input, source: "text" } as ChatActions),
+        onChangeText: (input: string, lines: number) => ({ type: 'Update_Input', input, lines, source: "text" } as ChatActions),
         stopListening:  () => ({ type: 'Listening_Stop' }),
         startListening:  () => ({ type: 'Listening_Starting' }),
         // only used to create helper functions below
@@ -158,6 +175,7 @@ export const Shell = connect(
     }, (stateProps: any, dispatchProps: any, ownProps: any): Props => ({
         // from stateProps
         inputText: stateProps.inputText,
+        lines: stateProps.lines,
         strings: stateProps.strings,
         listening : stateProps.listening,
         // from dispatchProps
