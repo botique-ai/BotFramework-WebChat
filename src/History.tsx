@@ -6,10 +6,12 @@ import { ActivityView } from './ActivityView';
 import { classList, doCardAction, IDoCardAction } from './Chat';
 import * as konsole from './Konsole';
 import { sendMessage } from './Store';
+import {generateShellLineCountClass} from './helpers/generateShellLineCountClass';
 
 export interface HistoryProps {
     format: FormatState,
     size: SizeState,
+    shellLines: number,
     activities: Activity[],
     lastSubmittedActivityId: string,
     isLoadingHistory: boolean,
@@ -166,7 +168,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
             }
         }
 
-        const groupsClassName = classList('wc-message-groups', !this.props.format.options.showHeader && 'no-header');
+        const groupsClassName = classList('wc-message-groups', !this.props.format.options.showHeader && 'no-header', generateShellLineCountClass(this.props.shellLines));
 
         return (
             <div onScroll={this.handleScroll.bind(this)} className={ groupsClassName } ref={ div => this.scrollMe = div || this.scrollMe }>
@@ -185,6 +187,7 @@ export const History = connect(
         size: state.size,
         activities: state.history.activities,
         lastSubmittedActivityId: state.history.lastSubmittedActivityId,
+        shellLines: state.shell.lines,
         // only used to create helper functions below
         connectionSelectedActivity: state.connection.selectedActivity,
         selectedActivity: state.history.selectedActivity,
@@ -205,6 +208,7 @@ export const History = connect(
         size: stateProps.size,
         activities: stateProps.activities,
         lastSubmittedActivityId: stateProps.lastSubmittedActivityId,
+        shellLines: stateProps.shellLines,
         // from dispatchProps
         setMeasurements: dispatchProps.setMeasurements,
         onClickRetry: dispatchProps.onClickRetry,

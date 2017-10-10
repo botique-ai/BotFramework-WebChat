@@ -1,0 +1,1 @@
+export const MAX_SHELL_LINES = 5; // make sure this value is in sync with $max-shell-lines inside `settings.scss`

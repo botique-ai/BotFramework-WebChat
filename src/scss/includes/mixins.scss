@@ -1,0 +1,12 @@
+@mixin shellLinesAffect($param){
+    // Handle multiline textbox
+    @for $i from 2 through ($max-shell-lines - 1) {
+        &.shell-lines-#{$i}{
+            #{$param}: ($consoleHeight + ($fontSize * $i));
+        }
+    }
+
+    &.shell-lines-max{
+        #{$param}: ($consoleHeight + ($fontSize * $max-shell-lines));
+    }   
+}

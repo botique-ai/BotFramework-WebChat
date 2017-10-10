@@ -1,5 +1,6 @@
 @import "includes/colors";
 @import "includes/settings";
+@import "includes/mixins";
 @import "includes/card-size";
 
 /* reset */
@@ -70,6 +71,8 @@
         &.no-header {
             top: 0;
         }
+
+        @include shellLinesAffect(bottom);
     }
 
     .wc-message-group-content {
@@ -175,6 +178,7 @@
         left: 0;
         position: absolute;
         right: 0;
+        @include shellLinesAffect(height);     
     }
 
 /* views */
@@ -649,7 +653,7 @@
         border: none;
         height: 100%;
         outline: none;
-        padding: 0;
+        padding: 16px 0 16px 0;
         resize: none;
         width: 100%;
     }
@@ -683,7 +687,13 @@
     .wc-textbox {
         bottom: 0;
         left: 18px;
-        right: 49px;
+        right: 72px;
+    }
+
+    .wc-measurer{
+        font-family: $fontFamily;
+        position: absolute;
+        visibility: hidden;
     }
 
     .wc-mic {

@@ -13,7 +13,7 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
     type: 'Send_Message',
     activity: {
         type: "message",
-        text,
+        text: text.trim(),
         from,
         locale,
         textFormat: 'plain',
@@ -45,13 +45,15 @@ const attachmentsFromFiles = (files: FileList) => {
 export interface ShellState {
     sendTyping: boolean
     input: string
+    lines: number
     listening: boolean
     lastInputViaSpeech : boolean
 }
 
 export type ShellAction = {
     type: 'Update_Input',
-    input: string
+    input: string,
+    lines: number,
     source: "text" | "speech"
 } | {
     type: 'Listening_Starting'
@@ -79,9 +81,10 @@ export type ShellAction = {
 export const shell: Reducer<ShellState> = (
     state: ShellState = {
         input: '',
+        lines: 1,
         sendTyping: false,
         listening : false,
-        lastInputViaSpeech : false
+        lastInputViaSpeech : false,
     },
     action: ShellAction
 ) => {
@@ -90,9 +93,9 @@ export const shell: Reducer<ShellState> = (
             return {
                 ... state,
                 input: action.input,
+                lines: action.lines,
                 lastInputViaSpeech : action.source == "speech"
             };
-
         case 'Listening_Start':
             return {
                 ... state,
@@ -108,6 +111,7 @@ export const shell: Reducer<ShellState> = (
         case 'Send_Message':
             return {
                 ... state,
+                lines: 1,
                 input: ''
             };
 
