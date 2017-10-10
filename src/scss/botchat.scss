@@ -674,10 +674,15 @@
           color: $c_brand;
         }
     }
-
-    .wc-upload svg {
-        height: 18px;
-        width: 26px;
+    .wc-console{
+        .wc-upload{
+            z-index: 1060;
+            font-size: 21px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            right: 66px;
+        }
     }
 
     #wc-upload-input {
@@ -687,7 +692,7 @@
     .wc-textbox {
         bottom: 0;
         left: 18px;
-        right: 72px;
+        right: 90px;
     }
 
     .wc-measurer{
