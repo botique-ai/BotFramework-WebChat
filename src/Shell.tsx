@@ -6,7 +6,7 @@ import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
 import { ChatActions, sendMessage, sendFiles } from './Store';
-import { MAX_SHELL_LINES } from './settings';
+import { generateShellLineCountClass } from './helpers/generateShellLineCountClass';
 
 interface Props {
     inputText: string,
@@ -116,7 +116,7 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
         );
 
         return (
-            <div className={`${className} wc-lines-${(this.props.lines < MAX_SHELL_LINES) ? this.props.lines : 'max'}`}>
+            <div className={`${className} ${generateShellLineCountClass(this.props.lines)}`}>
                 <input id="wc-upload-input" type="file" ref={ input => this.fileInput = input } multiple onChange={ () => this.onChangeFile() } />
                 <label className="wc-upload" htmlFor="wc-upload-input">
                     <svg>
@@ -126,7 +126,6 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
                 <div className="wc-textbox">
                     <span className="wc-measurer" ref={(span) => this.widthMeasurer = span} />
                     <textarea
-                    style={{width: '300px'}}
                         wrap="soft"
                         className="wc-shellinput"
                         ref={ input => this.textInput = input }

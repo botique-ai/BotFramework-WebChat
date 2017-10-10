@@ -13,7 +13,7 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
     type: 'Send_Message',
     activity: {
         type: "message",
-        text,
+        text: text.trim(),
         from,
         locale,
         textFormat: 'plain',
@@ -111,6 +111,7 @@ export const shell: Reducer<ShellState> = (
         case 'Send_Message':
             return {
                 ... state,
+                lines: 1,
                 input: ''
             };
 

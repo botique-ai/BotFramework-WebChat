@@ -1,5 +1,6 @@
 @import "includes/colors";
 @import "includes/settings";
+@import "includes/mixins";
 @import "includes/card-size";
 
 /* reset */
@@ -70,6 +71,8 @@
         &.no-header {
             top: 0;
         }
+
+        @include shellLinesAffect(bottom);
     }
 
     .wc-message-group-content {
@@ -175,17 +178,7 @@
         left: 0;
         position: absolute;
         right: 0;
-
-        // Handle multiline textbox
-        @for $i from 2 through ($max-shell-lines - 1) {
-            &.wc-lines-#{$i}{
-                height: ($consoleHeight + ($fontSize * $i));
-            }
-        }
-
-        &.wc-lines-max{
-            height: ($consoleHeight + ($fontSize * $max-shell-lines));
-        }        
+        @include shellLinesAffect(height);     
     }
 
 /* views */
