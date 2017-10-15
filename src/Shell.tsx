@@ -117,7 +117,7 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
 
         return (
             <div className={`${className} ${generateShellLineCountClass(this.props.lines)}`}>
-                <input id="wc-upload-input" type="file" ref={ input => this.fileInput = input } multiple onChange={ () => this.onChangeFile() } />
+                <input id="wc-upload-input" type="file" ref={ input => this.fileInput = input } onChange={ () => this.onChangeFile() } />
                 <label className="wc-upload" htmlFor="wc-upload-input">
                     <div className="wc-upload-icon">
                     📎
