@@ -590,7 +590,7 @@
 
     .wc-message-from-me .wc-message-content {
         background-color: $c_messageFromMe;
-        color: $c01;
+        color: $c01 !important;
     }
 
     .wc-message-from-me svg.wc-message-callout path {
