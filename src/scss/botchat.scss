@@ -246,6 +246,11 @@
         box-shadow: 0px 1px 1px 0px $c_shadow;
         padding: 8px;
         word-break: break-word;
+        text-align: left;
+
+        &.wc-message-content-rtl{
+            text-align: right;
+        }
       }
 
     .wc-message-content.clickable {
@@ -622,7 +627,6 @@
     .wc-message-from-bot .wc-message-content {
         background-color: $c_messageFromThem;
         color: $c00;
-        text-align: left;
     }
 
     .wc-message-from-bot svg.wc-message-callout path {
