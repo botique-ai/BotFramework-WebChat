@@ -598,11 +598,21 @@
 
     .wc-message-from-me.wc-message-from {
         text-align: right;
+        
+        a{
+            color: $c06;
+            text-decoration: underline !important;
+        }
     }
 
     .wc-message-from-me .wc-message-content {
         background-color: $c_messageFromMe;
         color: $c01 !important;
+
+        a{
+            color: $c01 !important;
+            text-decoration: underline !important;
+        }
     }
 
     .wc-message-from-me svg.wc-message-callout path {
