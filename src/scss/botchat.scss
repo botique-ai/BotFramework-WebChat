@@ -637,6 +637,11 @@
     .wc-message-from-bot .wc-message-content {
         background-color: $c_messageFromThem;
         color: $c00;
+        
+        a{
+            color: $c00;
+            text-decoration: underline !important;
+        }
     }
 
     .wc-message-from-bot svg.wc-message-callout path {
