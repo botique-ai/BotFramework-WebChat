@@ -258,13 +258,18 @@ const LTR_CHARS = 'A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0
 const RTL_CHARS = '\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC';
 const IS_RTL_REGEX = new RegExp('^[^'+LTR_CHARS+']*['+RTL_CHARS+']');
 
-export class WrappedActivity extends React.Component<WrappedActivityProps, {}> {
+export class WrappedActivity extends React.Component<WrappedActivityProps, {isTimestampVisibleHover: boolean, isTimestampVisibleClick: boolean}> {
     public messageDiv: HTMLDivElement;
     private isRTL: boolean = false;
+    private timestampTimerHandle: any;
 
     constructor(props: WrappedActivityProps) {
         super(props);
         this.detectRTL(props.activity);
+        this.state = {
+            isTimestampVisibleHover: false,
+            isTimestampVisibleClick: false,
+        }
     }   
 
     componentWillUpdate(nextProps: WrappedActivityProps){
@@ -315,10 +320,25 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {}> {
             this.props.selected && 'selected',
             this.isRTL && 'wc-message-content-rtl'
         );
-
+        
         return (
             <div data-activity-id={ this.props.activity.id } className={ wrapperClassName } onClick={ this.props.onClickActivity }>
-                <div className={ 'wc-message wc-message-from-' + who } ref={ div => this.messageDiv = div }>
+                <div 
+                    onMouseEnter={() => {
+                        this.timestampTimerHandle = setTimeout(() => this.setState({isTimestampVisibleHover: true}), 300)
+                    }} 
+                    onMouseLeave={() => {
+                        clearTimeout(this.timestampTimerHandle);
+                        this.setState({isTimestampVisibleHover: false}
+                    )}} 
+                    onMouseDown={() => {
+                        clearTimeout(this.timestampTimerHandle);
+                        this.setState({
+                            isTimestampVisibleClick: !this.state.isTimestampVisibleClick,
+                            isTimestampVisibleHover: false,
+                        })
+                    }} 
+                    className={ 'wc-message wc-message-from-' + who } ref={ div => this.messageDiv = div }>
                     <div className={ contentClassName }>
                         <svg className="wc-message-callout">
                             <path className="point-left" d="m0,6 l6 6 v-12 z" />
@@ -327,7 +347,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {}> {
                         { this.props.children }
                     </div>
                 </div>
-                <div className={ 'wc-message-from wc-message-from-' + who }>{ timeLine }</div>
+                <div className={ `wc-message-from wc-message-from-${who}${this.state.isTimestampVisibleClick || this.state.isTimestampVisibleHover ? '' : ' collapsed'}` }>{ timeLine }</div>
             </div>
         );
     }

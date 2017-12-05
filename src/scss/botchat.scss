@@ -283,6 +283,12 @@
         color: $c_textLight;
         font-size: 11px;
         margin-top: 5px;
+        transition: max-height $actionTransition;
+        max-height: $fontSize + 5px; // Hack to get height to transition
+
+        &.collapsed{
+            max-height: 0px;
+        }
     }
 
 /* cards */
