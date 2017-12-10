@@ -303,7 +303,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
                 let sent: string;
                 if (this.props.showTimestamp)
                     sent = this.props.format.strings.timeSent.replace('%1', (new Date(this.props.activity.timestamp)).toLocaleString());
-                timeLine = <span>{ this.props.activity.from.name || this.props.activity.from.id }{ sent }</span>;
+                timeLine = <span className={`${this.state.isTimestampVisibleClick || this.state.isTimestampVisibleHover ? '' : ' collapsed'}`}>{ this.props.activity.from.name || this.props.activity.from.id }{ sent }</span>;
                 break;
         }
 
@@ -347,8 +347,9 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
                         { this.props.children }
                     </div>
                 </div>
-                <div className={ `wc-message-from wc-message-from-${who}${this.state.isTimestampVisibleClick || this.state.isTimestampVisibleHover ? '' : ' collapsed'}` }>{ timeLine }</div>
+                <div className={ `wc-message-from wc-message-from-${who}` }>{ timeLine }</div>
             </div>
         );
     }
+}
 }
