@@ -352,4 +352,3 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
         );
     }
 }
-}
