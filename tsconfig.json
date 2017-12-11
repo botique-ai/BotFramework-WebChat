@@ -1,4 +1,7 @@
 {
+    "awesomeTypescriptLoaderOptions":{
+        "transpileOnly": true
+    },
     "compilerOptions": {
         "declaration": true,
         "importHelpers": true,

@@ -3,7 +3,9 @@ import { findDOMNode } from 'react-dom';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 
 import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes, GeneralEventType } from '@botique/botframework-directlinejs';
 import { createStore, ChatActions, sendMessage } from './Store';
@@ -39,10 +41,10 @@ export class Chat extends React.Component<ChatProps, {}> {
 
     private botConnection: IBotConnection;
 
-    private generalEventsSubscription: Subscription;
-    private activitySubscription: Subscription;
-    private connectionStatusSubscription: Subscription;
-    private selectedActivitySubscription: Subscription;
+    private generalEventsSubscription: Subscription | any;
+    private activitySubscription: Subscription | any;
+    private connectionStatusSubscription: Subscription | any;
+    private selectedActivitySubscription: Subscription | any;
     private shellRef: React.Component & ShellFunctions;
 
     private didInitialLoad = false;
@@ -165,7 +167,7 @@ export class Chat extends React.Component<ChatProps, {}> {
             this.selectedActivitySubscription = this.props.selectedActivity.subscribe(activityOrID => {
                 this.store.dispatch<ChatActions>({
                     type: 'Select_Activity',
-                    selectedActivity: activityOrID.activity || this.store.getState().history.activities.find(activity  => activity.id === activityOrID.id)
+                    selectedActivity: activityOrID.activity || this.store.getState().history.activities.find((activity: Activity)  => activity.id === activityOrID.id)
                 });
             });
         }

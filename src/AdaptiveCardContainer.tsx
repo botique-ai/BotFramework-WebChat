@@ -52,7 +52,7 @@ function cardWithoutHttpActions(card: AdaptiveCardSchema.ICard) {
     return { ...card, actions };
 }
 
-AdaptiveCards.AdaptiveCard.onExecuteAction = (action: AdaptiveCards.ExternalAction) => {
+AdaptiveCards.AdaptiveCard.onExecuteAction = async (action: AdaptiveCards.ExternalAction) => {
     if (action instanceof AdaptiveCards.OpenUrlAction) {
         window.open(action.url);
     } else if (action instanceof AdaptiveCards.SubmitAction) {
@@ -60,9 +60,9 @@ AdaptiveCards.AdaptiveCard.onExecuteAction = (action: AdaptiveCards.ExternalActi
         if (linkedAdaptiveCard && action.data !== undefined) {
             if (typeof action.data === 'object' && (action.data as BotFrameworkCardAction).__isBotFrameworkCardAction) {
                 const cardAction = (action.data as BotFrameworkCardAction);
-                linkedAdaptiveCard.adaptiveCardContainer.onCardAction(cardAction.type, cardAction.value);
+                await linkedAdaptiveCard.adaptiveCardContainer.onCardAction(cardAction.type, cardAction.value);
             } else {
-                linkedAdaptiveCard.adaptiveCardContainer.onCardAction(typeof action.data === 'string' ? 'imBack' : 'postBack', action.data);
+                await linkedAdaptiveCard.adaptiveCardContainer.onCardAction(typeof action.data === 'string' ? 'imBack' : 'postBack', action.data);
             }
         }
     }
@@ -75,10 +75,8 @@ export class AdaptiveCardContainer extends React.Component<Props, State> {
         super(props);
     }
 
-    public onCardAction: IDoCardAction = (type, value) => {
-        this.props.onCardAction(type, value);
-    }
-
+    public onCardAction: IDoCardAction = (type, value) => this.props.onCardAction(type, value);
+    
     private onClick(e: React.MouseEvent<HTMLElement>) {
         if (!this.props.onClick) return;
         //do not allow form elements to trigger a parent click event

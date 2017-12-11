@@ -582,11 +582,11 @@ import 'rxjs/add/observable/of';
 
 const getHistoryEpic: Epic<ChatActions, ChatState> = (action$, store) =>
     action$.ofType('Get_History')
-    .map(({limit}) => {
-        return ({ type: 'Get_History_Try', limit } as HistoryAction);
+    .map<any, any>(({limit}) => {
+        return ({ type: 'Get_History_Try', limit });
     });
 
-const tryGetHistoryEpic: Epic<any, ChatState> = (action$, store) =>
+const tryGetHistoryEpic: Epic<ChatActions | any, ChatState> = (action$, store) =>
     action$.ofType('Get_History_Try')
     .flatMap(({limit}) => {
         const state = store.getState();
@@ -604,7 +604,7 @@ const sendMessageEpic: Epic<ChatActions, ChatState> = (action$, store) =>
         return ({ type: 'Send_Message_Try', clientActivityId } as HistoryAction);
     });
 
-const trySendMessageEpic: Epic<ChatActions, ChatState> = (action$, store) =>
+const trySendMessageEpic: Epic<ChatActions | any, ChatState> = (action$, store) =>
     action$.ofType('Send_Message_Try')
     .flatMap(action => {
         const state = store.getState();
@@ -632,9 +632,9 @@ const trySendMessageEpic: Epic<ChatActions, ChatState> = (action$, store) =>
         .catch(error => Observable.of({ type: 'Send_Message_Fail', clientActivityId } as HistoryAction))
     });
 
-const speakObservable = Observable.bindCallback<string, string, {}, {}>(Speech.SpeechSynthesizer.speak);
+const speakObservable = Observable.bindCallback<string, string, {}, {}>(Speech.SpeechSynthesizer.speak as any);
 
-const speakSSMLEpic: Epic<ChatActions, ChatState> = (action$, store) =>
+const speakSSMLEpic: Epic<any, ChatState> = (action$, store) =>
     action$.ofType('Speak_SSML')
     .filter(action => action.ssml )
     .mergeMap(action => {
@@ -648,11 +648,11 @@ const speakSSMLEpic: Epic<ChatActions, ChatState> = (action$, store) =>
 
         const call$ = speakObservable(action.ssml, action.locale, onSpeakingStarted);
         return call$.map(onSpeakingFinished)
-            .catch(error => Observable.of(nullAction));
+            .catch((error: Error) => Observable.of(nullAction));
     })
     .merge(action$.ofType('Speak_SSML').map(_ => ({ type: 'Listening_Stop' } as ShellAction)));
 
-const speakOnMessageReceivedEpic: Epic<ChatActions, ChatState> = (action$, store) =>
+const speakOnMessageReceivedEpic: Epic<ChatActions | any, ChatState> = (action$, store) =>
     action$.ofType('Receive_Message')
     .filter(action => (action.activity as Message) && store.getState().shell.lastInputViaSpeech)
     .map(action => speakFromMsg(action.activity as Message, store.getState().format.locale) as ShellAction);
@@ -703,7 +703,7 @@ const listeningSilenceTimeoutEpic: Epic<ChatActions, ChatState> = (action$, stor
             .takeUntil(cancelMessages$));
 };
 
-const retrySendMessageEpic: Epic<ChatActions, ChatState> = (action$) =>
+const retrySendMessageEpic: Epic<ChatActions | any, ChatState> = (action$) =>
     action$.ofType('Send_Message_Retry')
     .map(action => ({ type: 'Send_Message_Try', clientActivityId: action.clientActivityId } as HistoryAction));
 
@@ -721,7 +721,7 @@ const updateSelectedActivityEpic: Epic<ChatActions, ChatState> = (action$, store
         return nullAction;
     });
 
-const showTypingEpic: Epic<ChatActions, ChatState> = (action$) =>
+const showTypingEpic: Epic<ChatActions | any, ChatState> = (action$) =>
     action$.ofType('Show_Typing')
     .delay(3000)
     .map(action => ({ type: 'Clear_Typing', id: action.activity.id } as HistoryAction));
