@@ -320,6 +320,9 @@ export const AttachmentView = (props: {
         case "video/mp4":
             return <Media type='video' poster={ attachment.thumbnailUrl } src={ attachment.contentUrl } onLoad={ props.onImageLoad } />;
 
+        case "location":
+            return <a target="_blank" href={`https://www.google.com/maps/search/?api=1&query=${attachment.content.latitude},${attachment.content.longitude}`}>🗺 Location Information</a>;
+
         default:
             var unknownAttachment = props.attachment as UnknownMedia;
             return <Unknown format={ props.format } contentType={ unknownAttachment.contentType } contentUrl={ unknownAttachment.contentUrl } name={ unknownAttachment.name } />;

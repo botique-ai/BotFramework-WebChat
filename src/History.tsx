@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Activity, Message, User, CardActionTypes } from '@botique/botframework-directlinejs';
-import { ChatState, FormatState, SizeState } from './Store';
+import { ChatState, FormatState, SizeState, showNotificationModal, sendLocation } from './Store';
 import { Dispatch, connect } from 'react-redux';
 import { ActivityView } from './ActivityView';
 import { classList, doCardAction, IDoCardAction } from './Chat';
@@ -139,7 +139,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                 this.largeWidth = this.props.size.width * 2;
                 content = <this.measurableCarousel/>;
             } else {
-                content = this.props.activities.map((activity, index) =>
+                content = this.props.activities.map((activity, index) => 
                     <WrappedActivity
                         format={ this.props.format }
                         key={ activity.channelData.clientActivityId }
@@ -200,7 +200,9 @@ export const History = connect(
         onLoadHistory: (limit: number) => ({ type: 'Get_History', limit }),
         onClickCardAction: () => ({ type: 'Card_Action_Clicked'}),
         // only used to create helper functions below
-        sendMessage
+        sendMessage,
+        sendLocation,
+        showNotificationModal,
     }, (stateProps: any, dispatchProps: any, ownProps: any): HistoryProps => ({
         // from stateProps
         isLoadingHistory: stateProps.isLoadingHistory,
@@ -214,8 +216,9 @@ export const History = connect(
         onClickRetry: dispatchProps.onClickRetry,
         onClickCardAction: dispatchProps.onClickCardAction,
         onLoadHistory: dispatchProps.onLoadHistory,
+        
         // helper functions
-        doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.format.locale, dispatchProps.sendMessage),
+        doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.format.locale, dispatchProps.sendMessage, dispatchProps.sendLocation, dispatchProps.showNotificationModal),
         isFromMe: (activity: Activity) => activity.from.id === stateProps.user.id,
         isSelected: (activity: Activity) => activity === stateProps.selectedActivity,
         onClickActivity: (activity: Activity) => stateProps.connectionSelectedActivity && (() => stateProps.connectionSelectedActivity.next({ activity }))
@@ -258,7 +261,7 @@ const LTR_CHARS = 'A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0
 const RTL_CHARS = '\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC';
 const IS_RTL_REGEX = new RegExp('^[^'+LTR_CHARS+']*['+RTL_CHARS+']');
 
-export class WrappedActivity extends React.Component<WrappedActivityProps, {isTimestampVisibleHover: boolean, isTimestampVisibleClick: boolean}> {
+export class WrappedActivity extends React.Component<WrappedActivityProps, {isFooterVisibleHover: boolean, isFooterVisibleClick: boolean}> {
     public messageDiv: HTMLDivElement;
     private isRTL: boolean = false;
     private timestampTimerHandle: any;
@@ -267,8 +270,8 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
         super(props);
         this.detectRTL(props.activity);
         this.state = {
-            isTimestampVisibleHover: false,
-            isTimestampVisibleClick: false,
+            isFooterVisibleHover: false,
+            isFooterVisibleClick: false,
         }
     }   
 
@@ -282,11 +285,15 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
         }
     }
 
+    getFooterCollapseStyleClass(){
+        return(`${this.state.isFooterVisibleClick || this.state.isFooterVisibleHover ? '' : ' collapsed'}`);
+    }
+
     render () {
         let timeLine: JSX.Element;
         switch (this.props.activity.id) {
             case undefined:
-                timeLine = <span>{ this.props.format.strings.messageSending }</span>;
+                timeLine = <span className={this.getFooterCollapseStyleClass()}>{ this.props.format.strings.messageSending }</span>;
                 break;
             case null:
                 timeLine = <span>{ this.props.format.strings.messageFailed }</span>;
@@ -303,7 +310,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
                 let sent: string;
                 if (this.props.showTimestamp)
                     sent = this.props.format.strings.timeSent.replace('%1', (new Date(this.props.activity.timestamp)).toLocaleString());
-                timeLine = <span className={`${this.state.isTimestampVisibleClick || this.state.isTimestampVisibleHover ? '' : ' collapsed'}`}>{ this.props.activity.from.name || this.props.activity.from.id }{ sent }</span>;
+                timeLine = <span className={this.getFooterCollapseStyleClass()}>{ this.props.activity.from.name || this.props.activity.from.id }{ sent }</span>;
                 break;
         }
 
@@ -325,17 +332,17 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isTi
             <div data-activity-id={ this.props.activity.id } className={ wrapperClassName } onClick={ this.props.onClickActivity }>
                 <div 
                     onMouseEnter={() => {
-                        this.timestampTimerHandle = setTimeout(() => this.setState({isTimestampVisibleHover: true}), 300)
+                        this.timestampTimerHandle = setTimeout(() => this.setState({isFooterVisibleHover: true}), 300)
                     }} 
                     onMouseLeave={() => {
                         clearTimeout(this.timestampTimerHandle);
-                        this.setState({isTimestampVisibleHover: false}
+                        this.setState({isFooterVisibleHover: false}
                     )}} 
                     onMouseDown={() => {
                         clearTimeout(this.timestampTimerHandle);
                         this.setState({
-                            isTimestampVisibleClick: !this.state.isTimestampVisibleClick,
-                            isTimestampVisibleHover: false,
+                            isFooterVisibleClick: !this.state.isFooterVisibleClick,
+                            isFooterVisibleHover: false,
                         })
                     }} 
                     className={ 'wc-message wc-message-from-' + who } ref={ div => this.messageDiv = div }>

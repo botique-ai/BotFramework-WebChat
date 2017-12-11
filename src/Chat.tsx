@@ -13,6 +13,7 @@ import { Speech } from './SpeechModule';
 import { ActivityOrID, FormatOptions } from './Types';
 import * as konsole from './Konsole';
 import { getTabIndex } from './getTabIndex';
+import { NotificationModal } from './NotificationModal';
 
 export interface ChatProps {
     user: User,
@@ -164,7 +165,7 @@ export class Chat extends React.Component<ChatProps, {}> {
             this.selectedActivitySubscription = this.props.selectedActivity.subscribe(activityOrID => {
                 this.store.dispatch<ChatActions>({
                     type: 'Select_Activity',
-                    selectedActivity: activityOrID.activity || this.store.getState().history.activities.find(activity => activity.id === activityOrID.id)
+                    selectedActivity: activityOrID.activity || this.store.getState().history.activities.find(activity  => activity.id === activityOrID.id)
                 });
             });
         }
@@ -219,6 +220,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                     tabIndex={ 0 }
                 >
                     { header }
+                    <NotificationModal/>
                     <MessagePane>
                         <History />
                     </MessagePane>
@@ -231,7 +233,28 @@ export class Chat extends React.Component<ChatProps, {}> {
 }
 
 export interface IDoCardAction {
-    (type: CardActionTypes, value: string | object): void;
+    (type: CardActionTypes, value: string | object): Promise<boolean>;
+}
+
+const handleGeoLocation = async (showNotificationModal: (title: string, text: string, buttonText: string) => void,) : Promise<Position> => {
+    return new Promise<Position>((res, rej) => {
+        if(!navigator.geolocation){
+            showNotificationModal('Location services not supported', 'Location services are not supported by you browser', 'Cancel');
+            res();
+        } else {
+            navigator.geolocation.getCurrentPosition(res, (err) => {
+                switch(err.code){
+                    case err.PERMISSION_DENIED:
+                        showNotificationModal('Permission Required', 'Botique needs permission to access your location. Please update your browser settings.', "Cancel");
+                        break;
+                    default:
+                        showNotificationModal('Location unavailable', 'Location information is currently unavailable, please try again later', "Cancel");
+                        break;
+                }
+                res();
+            })
+        }
+    })
 }
 
 export const doCardAction = (
@@ -239,13 +262,16 @@ export const doCardAction = (
     from: User,
     locale: string,
     sendMessage: (value: string, user: User, locale: string) => void,
-): IDoCardAction => (
+    sendLocation: (user: User, position: Position, locale: string) => void,
+    showNotificationModal: (title: string, text: string, buttonText: string) => void,
+): IDoCardAction => async (
     type,
     actionValue
 ) => {
 
     const text = (typeof actionValue === 'string') ? actionValue as string : undefined;
     const value = (typeof actionValue === 'object')? actionValue as object : undefined;
+    let actionSuccess = true;
 
     switch (type) {
         case "imBack":
@@ -255,6 +281,15 @@ export const doCardAction = (
 
         case "postBack":
             sendPostBack(botConnection, text, value, from, locale);
+            break;
+        
+        case "location":
+            const position = await handleGeoLocation(showNotificationModal)
+            if(position){
+                sendLocation(from, position, locale);
+            } else {
+                actionSuccess = false;
+            }
             break;
 
         case "call":
@@ -270,6 +305,7 @@ export const doCardAction = (
         default:
             konsole.log("unknown button type", type);
         }
+    return actionSuccess;
 }
 
 export const sendPostBack = (botConnection: IBotConnection, text: string, value: object, from: User, locale: string) => {

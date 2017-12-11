@@ -28,7 +28,7 @@
   "author": "Microsoft Corp",
   "license": "MIT",
   "dependencies": {
-    "@botique/botframework-directlinejs": "^0.11.0",
+    "@botique/botframework-directlinejs": "^0.12.0",
     "@types/react": "15.0.38",
     "core-js": "2.4.1",
     "markdown-it": "8.3.1",
@@ -36,6 +36,7 @@
     "microsoft-speech-browser-sdk": "0.0.1",
     "react": "15.6.1",
     "react-dom": "15.6.1",
+    "react-modal": "^3.1.7",
     "react-redux": "5.0.5",
     "redux": "3.7.2",
     "redux-observable": "0.13.0",
@@ -51,6 +52,7 @@
     "@types/markdown-it": "0.0.2",
     "@types/nightmare": "1.6.30",
     "@types/react-dom": "0.14.23",
+    "@types/react-modal": "^3.1.0",
     "@types/react-redux": "4.4.38",
     "awesome-typescript-loader": "3.1.2",
     "body-parser": "1.16.0",
@@ -74,7 +76,7 @@
     "remote": "0.2.6",
     "rimraf": "2.6.1",
     "source-map-loader": "0.2.1",
-    "typescript": "2.3",
+    "typescript": "2.6.2",
     "vo": "4.0.2",
     "webpack": "2.3.3"
   },

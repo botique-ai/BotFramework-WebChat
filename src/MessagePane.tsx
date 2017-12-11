@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Activity, CardAction, User, Message } from '@botique/botframework-directlinejs';
-import { ChatState } from './Store';
+import * as Modal from 'react-modal';
+import { ChatState, showNotificationModal, sendLocation } from './Store';
 import { connect } from 'react-redux';
 import { HScroll } from './HScroll';
 import { classList, doCardAction, IDoCardAction } from './Chat';
@@ -29,14 +30,15 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
         super(props);
     }
 
-    actionClick(e: React.MouseEvent<HTMLButtonElement>, cardAction: CardAction) {
-
+    async actionClick(e: React.MouseEvent<HTMLButtonElement>, cardAction: CardAction) {
         //"stale" actions may be displayed (see shouldComponentUpdate), do not respond to click events if there aren't actual actions
         if (!this.props.activityWithSuggestedActions) return;
-
-        this.props.takeSuggestedAction(this.props.activityWithSuggestedActions);
-        this.props.doCardAction(cardAction.type, cardAction.value);
+        const activity = this.props.activityWithSuggestedActions;
         e.stopPropagation();
+        
+        if(await this.props.doCardAction(cardAction.type, cardAction.value)){
+            this.props.takeSuggestedAction(activity);
+        };
     }
 
     shouldComponentUpdate(nextProps: MessagePaneProps) {
@@ -55,15 +57,36 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
             >
                 <ul>{ this.props.activityWithSuggestedActions.suggestedActions.actions.map((action, index) =>
                     <li key={ index }>
-                        <button type="button" onClick={ e => this.actionClick(e, action) } title={ action.title }>
-                            { action.title }
-                        </button>
+                        { action.type === "location" ? 
+                            <LocationAction onClick={this.actionClick.bind(this)} cardAction={action}/> : 
+                            <TextAction onClick={this.actionClick.bind(this)} cardAction={action} />
+                        }
                     </li>
                 ) }</ul>
             </HScroll>
         );
     }
+}
 
+interface CardActionPropTypes{
+    cardAction: CardAction, 
+    onClick: (e: React.MouseEvent<HTMLButtonElement>, cardAction: CardAction) => any
+}
+
+const TextAction = ({cardAction, onClick}: CardActionPropTypes) => {
+    return(
+        <button type="button" onClick={ e => onClick(e, cardAction) } title={ cardAction.title }>
+            { cardAction.title }
+        </button>
+    );
+}
+
+const LocationAction = ({cardAction, onClick}: CardActionPropTypes) => {
+    return(
+        <button type="button" onClick={ e => onClick(e, cardAction) } title="Send my location">
+            📍 Send My Location
+        </button>
+    );
 }
 
 function activityWithSuggestedActions(activities: Activity[]) {
@@ -88,7 +111,9 @@ export const MessagePane = connect(
     }), {
         takeSuggestedAction: (message: Message) => ({ type: 'Take_SuggestedAction', message } as ChatActions),
         // only used to create helper functions below
-        sendMessage
+        sendMessage,
+        sendLocation,
+        showNotificationModal,
     }, (stateProps: any, dispatchProps: any, ownProps: any): MessagePaneProps => ({
         // from stateProps
         activityWithSuggestedActions: stateProps.activityWithSuggestedActions,
@@ -97,6 +122,6 @@ export const MessagePane = connect(
         // from ownProps
         children: ownProps.children,
         // helper functions
-        doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.locale, dispatchProps.sendMessage),
+        doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.locale, dispatchProps.sendMessage, dispatchProps.sendLocation, dispatchProps.showNotificationModal),
     })
 )(MessagePaneView);

@@ -818,4 +818,29 @@
     .wc-app ::-webkit-scrollbar-thumb {
         background-color: $c_chrome;
     }
-    
+  
+    /* Notification modal */
+
+    .notification-modal {
+        position: absolute;
+        height: $modal-height;
+        transform: translate(50%, -($modal-height / 2));
+        top: 50%;
+        width: 50%;
+        border: 1px solid #ccc;
+        background: #fff;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 4px;
+        outline: none;
+        padding: 20px;
+      
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      
+      .notification-modal-buttons{
+        display: flex;
+        flex-direction: row-reverse;
+      }

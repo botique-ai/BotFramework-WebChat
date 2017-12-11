@@ -1,4 +1,4 @@
-import { Activity, ConnectionStatus, IBotConnection, Media, MediaType, Message, User, ActivitySet } from '@botique/botframework-directlinejs';
+import { Activity, Location, ConnectionStatus, IBotConnection, Media, MediaType, Message, User, ActivitySet } from '@botique/botframework-directlinejs';
 import { strings, defaultStrings, Strings } from './Strings';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Speech } from './SpeechModule';
@@ -7,7 +7,7 @@ import * as konsole from './Konsole';
 
 // Reducers - perform state transformations
 
-import { Reducer } from 'redux';
+import { Reducer, compose } from 'redux';
 
 export const sendMessage = (text: string, from: User, locale: string) => ({
     type: 'Send_Message',
@@ -20,6 +20,19 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
         timestamp: (new Date()).toISOString()
     }} as ChatActions);
 
+export const showNotificationModal = (title: string, text: string, buttonText: string = "Ok") => ({
+    type: 'Show_Modal',
+    modalSettings: {
+        title,
+        text,
+        buttonText,
+    }
+})
+
+export const hideNotificationModal = () => ({
+    type: 'Hide_Modal',
+})
+
 export const sendFiles = (files: FileList, from: User, locale: string) => ({
     type: 'Send_Message',
     activity: {
@@ -28,6 +41,25 @@ export const sendFiles = (files: FileList, from: User, locale: string) => ({
         from,
         locale
     }} as ChatActions);
+
+export const sendLocation = (from: User, position: Position, locale: string) => ({
+    type: 'Send_Message',
+    activity: {
+        type: "message",
+        attachments: [
+            {
+                contentType: 'location',
+                content: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                }
+            }
+        ],
+        from,
+        timestamp: (new Date()).toISOString(),
+        locale,
+    }
+})
 
 const attachmentsFromFiles = (files: FileList) => {
     const attachments: Media[] = [];
@@ -266,6 +298,12 @@ export const connection: Reducer<ConnectionState> = (
     }
 }
 
+export interface ModalSettings{
+    title: string,
+    text: string,
+    buttonText: string,
+}
+
 export interface HistoryState {
     activities: Activity[],
     clientActivityBase: string,
@@ -273,6 +311,8 @@ export interface HistoryState {
     selectedActivity: Activity,
     lastSubmittedActivityId: string,
     isLoadingHistory: boolean,
+    isModalOpen: boolean,
+    modalSettings: ModalSettings, 
 }
 
 export type HistoryAction = {
@@ -300,6 +340,11 @@ export type HistoryAction = {
 } | {
     type: 'Clear_Typing',
     id: string
+} | {
+    type: 'Show_Modal',
+    modalSettings: ModalSettings,
+} | {
+    type: 'Hide_Modal',
 }
 
 const copyArrayWithUpdatedItem = <T>(array: Array<T>, i: number, item: T) => [
@@ -316,6 +361,8 @@ export const history: Reducer<HistoryState> = (
         selectedActivity: null,
         lastSubmittedActivityId: null,
         isLoadingHistory: false,
+        isModalOpen: false,
+        modalSettings: {} as any, 
     },
     action: HistoryAction
 ) => {
@@ -454,14 +501,24 @@ export const history: Reducer<HistoryState> = (
             const activity = state.activities[i];
             const newActivity = {
                 ... activity,
-                suggestedActions: undefined
+                suggestedActions: undefined as undefined
             };
             return {
                 ... state,
                 activities: copyArrayWithUpdatedItem(state.activities, i, newActivity),
                 selectedActivity: state.selectedActivity === activity ? newActivity : state.selectedActivity
             }
-
+        case 'Show_Modal':
+            return {
+                ... state,
+                isModalOpen: true,
+                modalSettings: action.modalSettings,
+            }
+        case 'Hide_Modal':
+            return {
+                ... state,
+                isModalOpen: false,
+            }
         default:
             return state;
     }
@@ -553,6 +610,7 @@ const trySendMessageEpic: Epic<ChatActions, ChatState> = (action$, store) =>
         const state = store.getState();
         const clientActivityId = action.clientActivityId;
         const activity = state.history.activities.find(activity => activity.channelData && activity.channelData.clientActivityId === clientActivityId);
+        
         if (!activity) {
             konsole.log("trySendMessage: activity not found");
             return Observable.empty<HistoryAction>();
@@ -568,7 +626,7 @@ const trySendMessageEpic: Epic<ChatActions, ChatState> = (action$, store) =>
             };
             (<any>activity).entities  =(<any>activity).entities == null ? [capabilities] :  [...(<any>activity).entities, capabilities];
         }
-
+        
         return state.connection.botConnection.postActivity(activity)
         .map(id => ({ type: 'Send_Message_Succeed', clientActivityId, id } as HistoryAction))
         .catch(error => Observable.of({ type: 'Send_Message_Fail', clientActivityId } as HistoryAction))
@@ -688,6 +746,15 @@ const sendTypingEpic: Epic<ChatActions, ChatState> = (action$, store) =>
 import { Store, createStore as reduxCreateStore, combineReducers } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
+const composeEnhancers =
+    (process.env.NODE_ENV !== "production" &&
+    typeof window === "object" &&
+    (window as  any)["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]) ? 
+        (window as any)["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]({
+            name: 'BotFramework-WebChat'
+        }) : compose;
+compose;
+
 export const createStore = () =>
     reduxCreateStore(
         combineReducers<ChatState>({
@@ -697,7 +764,7 @@ export const createStore = () =>
             connection,
             history
         }),
-        applyMiddleware(createEpicMiddleware(combineEpics(
+        composeEnhancers(applyMiddleware(createEpicMiddleware(combineEpics(
             updateSelectedActivityEpic,
             getHistoryEpic,
             tryGetHistoryEpic,
@@ -712,7 +779,7 @@ export const createStore = () =>
             stopListeningEpic,
             stopSpeakingEpic,
             listeningSilenceTimeoutEpic
-        )))
+        ))),)
     );
 
 export type ChatStore = Store<ChatState>;
