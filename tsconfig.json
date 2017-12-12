@@ -14,7 +14,8 @@
         "noImplicitAny": true,
         "outDir": "./built/",
         "target": "es5",
-        "sourceMap": true
+        "sourceMap": true,
+        "noStrictGenericChecks": true
     },
     "files": [
         "src/adaptivecards-hostconfig.d.ts",
