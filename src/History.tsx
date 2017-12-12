@@ -6,6 +6,7 @@ import { ActivityView } from './ActivityView';
 import { classList, doCardAction, IDoCardAction } from './Chat';
 import * as konsole from './Konsole';
 import { sendMessage } from './Store';
+import { Spinner } from './Spinner';
 import {generateShellLineCountClass} from './helpers/generateShellLineCountClass';
 
 export interface HistoryProps {
@@ -15,6 +16,7 @@ export interface HistoryProps {
     activities: Activity[],
     lastSubmittedActivityId: string,
     isLoadingHistory: boolean,
+    isHistoryFullyLoaded: boolean,
 
     setMeasurements: (carouselMargin: number) => void,
     onClickRetry: (activity: Activity) => void,
@@ -125,9 +127,15 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
     }
 
     private handleScroll(){
-        if(this.scrollMe.scrollTop < 30 && !this.props.isLoadingHistory){
+        if(this.scrollMe.scrollTop < 30 && !this.props.isLoadingHistory && !this.props.isHistoryFullyLoaded){
             this.props.onLoadHistory(LOAD_HISTORY_LIMIT);
         }
+    }
+
+    private renderSpinner(){
+        return(
+            <div className="wc-message-groups-spinner-container"><Spinner/></div>
+        )
     }
 
     render() {
@@ -172,6 +180,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
 
         return (
             <div onScroll={this.handleScroll.bind(this)} className={ groupsClassName } ref={ div => this.scrollMe = div || this.scrollMe }>
+                {this.props.isLoadingHistory && this.renderSpinner()}
                 <div className="wc-message-group-content" ref={ div => { if (div) this.scrollContent = div }}>
                     { content }
                 </div>
@@ -192,6 +201,7 @@ export const History = connect(
         connectionSelectedActivity: state.connection.selectedActivity,
         selectedActivity: state.history.selectedActivity,
         isLoadingHistory: state.history.isLoadingHistory,
+        isHistoryFullyLoaded: state.history.isHistoryFullyLoaded,
         botConnection: state.connection.botConnection,
         user: state.connection.user,
     }), {
@@ -206,6 +216,7 @@ export const History = connect(
     }, (stateProps: any, dispatchProps: any, ownProps: any): HistoryProps => ({
         // from stateProps
         isLoadingHistory: stateProps.isLoadingHistory,
+        isHistoryFullyLoaded: stateProps.isHistoryFullyLoaded,
         format: stateProps.format,
         size: stateProps.size,
         activities: stateProps.activities,

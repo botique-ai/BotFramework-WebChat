@@ -311,6 +311,7 @@ export interface HistoryState {
     selectedActivity: Activity,
     lastSubmittedActivityId: string,
     isLoadingHistory: boolean,
+    isHistoryFullyLoaded: boolean,
     isModalOpen: boolean,
     modalSettings: ModalSettings, 
 }
@@ -361,6 +362,7 @@ export const history: Reducer<HistoryState> = (
         selectedActivity: null,
         lastSubmittedActivityId: null,
         isLoadingHistory: false,
+        isHistoryFullyLoaded: false,
         isModalOpen: false,
         modalSettings: {} as any, 
     },
@@ -379,6 +381,7 @@ export const history: Reducer<HistoryState> = (
             return{
                 ...state,
                 isLoadingHistory: false,
+                isHistoryFullyLoaded: action.activitySet.activities.length === 0,
                 activities: [
                     ...(action.activitySet.activities)
                         .filter((curr) => !state.activities.find((el) => el.channelData.clientActivityId === curr.channelData.clientActivityId)), ...state.activities]
