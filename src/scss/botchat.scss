@@ -2,6 +2,7 @@
 @import "includes/settings";
 @import "includes/mixins";
 @import "includes/card-size";
+@import "includes/spinner";
 
 /* reset */
 
@@ -73,6 +74,12 @@
         }
 
         @include shellLinesAffect(bottom);
+    }
+
+    .wc-message-groups-spinner-container{
+        position: absolute;
+        left: 0;
+        right: 0;
     }
 
     .wc-message-group-content {
