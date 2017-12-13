@@ -56,7 +56,7 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
                 scrollUnit="page"
             >
                 <ul>{ this.props.activityWithSuggestedActions.suggestedActions.actions.map((action, index) =>
-                    <li key={ index }>
+                    <li key={ `${action.title}-${index}` }>
                         { action.type === "location" ? 
                             <LocationAction onClick={this.actionClick.bind(this)} cardAction={action}/> : 
                             <TextAction onClick={this.actionClick.bind(this)} cardAction={action} />
