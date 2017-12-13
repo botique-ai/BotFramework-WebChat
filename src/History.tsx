@@ -7,6 +7,7 @@ import { classList, doCardAction, IDoCardAction } from './Chat';
 import * as konsole from './Konsole';
 import { sendMessage } from './Store';
 import { Spinner } from './Spinner';
+import { isRTL } from './helpers/isRTL';
 import {generateShellLineCountClass} from './helpers/generateShellLineCountClass';
 
 export interface HistoryProps {
@@ -271,10 +272,6 @@ export interface WrappedActivityProps {
     onClickRetry: React.MouseEventHandler<HTMLAnchorElement>
 }
 
-const LTR_CHARS = 'A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0800-\u1FFF'+'\u2C00-\uFB1C\uFDFE-\uFE6F\uFEFD-\uFFFF';
-const RTL_CHARS = '\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC';
-const IS_RTL_REGEX = new RegExp('^[^'+LTR_CHARS+']*['+RTL_CHARS+']');
-
 export class WrappedActivity extends React.Component<WrappedActivityProps, {isFooterVisibleHover: boolean, isFooterVisibleClick: boolean}> {
     public messageDiv: HTMLDivElement;
     private isRTL: boolean = false;
@@ -295,7 +292,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
 
     detectRTL(activity: Activity){
         if(activity.type === 'message' && activity.text){
-            this.isRTL = IS_RTL_REGEX.test(activity.text[0]);
+            this.isRTL = isRTL(activity.text)
         }
     }
 
@@ -339,7 +336,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
         const contentClassName = classList(
             'wc-message-content',
             this.props.selected && 'selected',
-            this.isRTL && 'wc-message-content-rtl'
+            this.isRTL && 'rtl'
         );
         
         return (

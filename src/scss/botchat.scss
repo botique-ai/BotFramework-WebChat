@@ -11,6 +11,11 @@
         font-size: $fontSize;
     }
 
+    .rtl{
+        text-align: right !important;
+        direction: rtl !important;
+    }
+
     .wc-app button {
         background-color: $c06;
         border: 1px solid $c05;
@@ -256,11 +261,6 @@
         padding: 8px;
         word-break: break-word;
         text-align: left;
-
-        &.wc-message-content-rtl{
-            text-align: right;
-            direction: rtl;
-        }
       }
 
     .wc-message-content.clickable {
@@ -737,7 +737,7 @@
     .wc-textbox {
         bottom: 0;
         left: 18px;
-        right: 90px;
+        right: 106px;
     }
 
     .wc-measurer{

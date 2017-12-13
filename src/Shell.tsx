@@ -7,6 +7,7 @@ import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
 import { ChatActions, sendMessage, sendFiles } from './Store';
 import { generateShellLineCountClass } from './helpers/generateShellLineCountClass';
+import { isRTL } from './helpers/isRTL';
 
 interface Props {
     inputText: string,
@@ -100,6 +101,9 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
     render() {
         let className = 'wc-console';
         if (this.props.inputText.length > 0) className += ' has-text';
+        if (isRTL(this.props.inputText)){
+            className += ' rtl'
+        }
 
         const showMicButton = this.props.listening || (Speech.SpeechRecognizer.speechIsAvailable()  && !this.props.inputText.length);
         const sendButtonClassName = classList(
