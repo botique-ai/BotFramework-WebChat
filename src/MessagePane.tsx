@@ -7,6 +7,7 @@ import { HScroll } from './HScroll';
 import { classList, doCardAction, IDoCardAction } from './Chat';
 import * as konsole from './Konsole';
 import { ChatActions, sendMessage } from './Store';
+import { isRTL } from './helpers/isRTL';
 
 export interface MessagePaneProps {
     activityWithSuggestedActions: Message,
@@ -75,7 +76,7 @@ interface CardActionPropTypes{
 
 const TextAction = ({cardAction, onClick}: CardActionPropTypes) => {
     return(
-        <button type="button" onClick={ e => onClick(e, cardAction) } title={ cardAction.title }>
+        <button className={`${isRTL(cardAction.title) ? 'rtl' : ''}`} type="button" onClick={ e => onClick(e, cardAction) } title={ cardAction.title }>
             { cardAction.title }
         </button>
     );
