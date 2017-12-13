@@ -10,6 +10,13 @@
         font-family: $fontFamily;
         font-size: $fontSize;
     }
+    
+    // Remove blue thingy
+    *{
+        &:focus{
+          outline: none;
+        }
+    }
 
     .rtl{
         text-align: right !important;
