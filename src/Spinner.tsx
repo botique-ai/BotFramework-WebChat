@@ -5,6 +5,8 @@ export interface SpinnerProps {
 
 export function Spinner (props: SpinnerProps) {
     return (
-      <div className="spinner"/>
+      <div className="spinner-container">
+        <div className="spinner"/>
+      </div>
     );
 }

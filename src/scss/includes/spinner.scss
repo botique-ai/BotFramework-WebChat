@@ -1,4 +1,16 @@
 @import "./colors";
+@import "./settings.scss";
+
+.spinner-container{
+  font-size: $spinner-size;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  width: 12em;
+  height: 12em;
+  border-radius: 50%;
+  box-shadow: 1px 1px 5px 0px black;
+}
 
 .spinner,
 .spinner:after {
@@ -8,7 +20,7 @@
 }
 .spinner {
   margin: 0 auto;
-  font-size: 3.5px; // <--- spinner size
+  font-size: $spinner-size; // <--- spinner size
   position: relative;
   text-indent: -9999em;
   border-top: 1.1em solid rgba(255, 255, 255, 0.2);
