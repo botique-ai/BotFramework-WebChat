@@ -10,6 +10,7 @@
   height: 12em;
   border-radius: 50%;
   box-shadow: 1px 1px 5px 0px black;
+  background-color: white;
 }
 
 .spinner,
@@ -19,6 +20,7 @@
   height: 10em;
 }
 .spinner {
+  background-color: white;
   margin: 0 auto;
   font-size: $spinner-size; // <--- spinner size
   position: relative;
