@@ -119,9 +119,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                 key = inputtableKey(evt.key);
             }
 
-            if(this.shellRef){
-                this.shellRef.focus(key);
-            }
+            this.focusShell(key);
         }
     }
 
@@ -193,6 +191,12 @@ export class Chat extends React.Component<ChatProps, {}> {
         window.removeEventListener('resize', this.resizeListener);
     }
 
+    focusShell(key?: string){
+        if(this.shellRef){
+            this.shellRef.focus(key);
+        }
+    }
+
     // At startup we do three render passes:
     // 1. To determine the dimensions of the chat panel (nothing needs to actually render here, so we don't)
     // 2. To determine the margins of any given carousel (we just render one mock activity so that we can measure it)
@@ -223,7 +227,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                 >
                     { header }
                     <NotificationModal/>
-                    <MessagePane>
+                    <MessagePane onSuggestedActionClick={() => this.focusShell()}>
                         <History />
                     </MessagePane>
                     <Shell ref={ this._saveShellRef } />

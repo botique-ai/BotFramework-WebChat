@@ -12,7 +12,7 @@ import { isRTL } from './helpers/isRTL';
 export interface MessagePaneProps {
     activityWithSuggestedActions: Message,
 
-    takeSuggestedAction: (message: Message) => any,
+    onSuggestedActionClick: (message: Message) => any,
 
     children: React.ReactNode,
     doCardAction: IDoCardAction
@@ -36,9 +36,10 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
         if (!this.props.activityWithSuggestedActions) return;
         const activity = this.props.activityWithSuggestedActions;
         e.stopPropagation();
-        
+
+        // Do card action can reject, 
         if(await this.props.doCardAction(cardAction.type, cardAction.value)){
-            this.props.takeSuggestedAction(activity);
+            this.props.onSuggestedActionClick(activity);
         };
     }
 
@@ -101,6 +102,7 @@ function activityWithSuggestedActions(activities: Activity[]) {
         return lastActivity;
 }
 
+
 export const MessagePane = connect(
     (state: ChatState) => ({
         // passed down to MessagePaneView
@@ -110,7 +112,7 @@ export const MessagePane = connect(
         user: state.connection.user,
         locale: state.format.locale
     }), {
-        takeSuggestedAction: (message: Message) => ({ type: 'Take_SuggestedAction', message } as ChatActions),
+        onSuggestedActionClick: (message: Message) => ({ type: 'Take_SuggestedAction', message } as ChatActions),
         // only used to create helper functions below
         sendMessage,
         sendLocation,
@@ -119,7 +121,10 @@ export const MessagePane = connect(
         // from stateProps
         activityWithSuggestedActions: stateProps.activityWithSuggestedActions,
         // from dispatchProps
-        takeSuggestedAction: dispatchProps.takeSuggestedAction,
+        onSuggestedActionClick: (activity) => {
+            dispatchProps.onSuggestedActionClick(activity);
+            ownProps.onSuggestedActionClick(activity);
+        },
         // from ownProps
         children: ownProps.children,
         // helper functions
