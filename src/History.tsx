@@ -211,7 +211,7 @@ export const History = connect(
     }), {
         setMeasurements: (carouselMargin: number) => ({ type: 'Set_Measurements', carouselMargin }),
         onClickRetry: (activity: Activity) => ({ type: 'Send_Message_Retry', clientActivityId: activity.channelData.clientActivityId }),
-        onLoadHistory: (limit: number) => ({ type: 'Get_History', limit }),
+        onLoadHistory: (limit: number) => ({ type: 'Get_History_Try', limit }),
         onClickCardAction: () => ({ type: 'Card_Action_Clicked'}),
         // only used to create helper functions below
         sendMessage,

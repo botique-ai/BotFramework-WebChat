@@ -151,7 +151,7 @@ export class Chat extends React.Component<ChatProps, {}> {
 
                 if(!this.didInitialLoad){
                     this.didInitialLoad = true;
-                    this.store.dispatch<ChatActions>({ type: 'Get_History', limit: 25 })
+                    this.store.dispatch<ChatActions>({ type: 'Get_History_Try', limit: 25 })
                 }
             }
         );

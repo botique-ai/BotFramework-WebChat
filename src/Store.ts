@@ -317,7 +317,7 @@ export interface HistoryState {
 }
 
 export type HistoryAction = {
-    type: 'Get_History' | 'Get_History_Try'
+    type: 'Get_History_Try'
     limit: number,
 } | {
     type: 'Get_History_Succeed' | 'Get_History_Fail'
@@ -583,12 +583,6 @@ import 'rxjs/add/observable/bindCallback';
 import 'rxjs/add/observable/empty';
 import 'rxjs/add/observable/of';
 
-const getHistoryEpic: Epic<ChatActions, ChatState> = (action$, store) =>
-    action$.ofType('Get_History')
-    .map<any, any>(({limit}) => {
-        return ({ type: 'Get_History_Try', limit });
-    });
-
 const tryGetHistoryEpic: Epic<ChatActions | any, ChatState> = (action$, store) =>
     action$.ofType('Get_History_Try')
     .flatMap(({limit}) => {
@@ -769,7 +763,6 @@ export const createStore = () =>
         }),
         composeEnhancers(applyMiddleware(createEpicMiddleware(combineEpics(
             updateSelectedActivityEpic,
-            getHistoryEpic,
             tryGetHistoryEpic,
             sendMessageEpic,
             trySendMessageEpic,
