@@ -34,6 +34,21 @@ const localizedStrings: LocalizedStrings = {
         consolePlaceholder: "Type your message...",
         listeningIndicator: "Listening..."
     },
+    'he-il': {
+        title: "צ׳אט",
+        send: "שלח",
+        unknownFile: "[קובץ מסוג '%1']",
+        unknownCard: "[כרטיס לא מוכר '%1']",
+        receiptVat: "מע״מ",
+        receiptTax: "מס",
+        receiptTotal: "סה״כ",
+        messageRetry: "נסה שוב",
+        messageFailed: "שליחה נכשלה",
+        messageSending: "שולח",
+        timeSent: " ב %1",
+        consolePlaceholder: "כתוב הודעה...",
+        listeningIndicator: "מאזין..."
+    },
     'nb-no': {
         title: "Chat",
         send: "Send",
@@ -48,7 +63,7 @@ const localizedStrings: LocalizedStrings = {
         timeSent: " %1",
         consolePlaceholder: "Skriv inn melding...",
         listeningIndicator: "Lytter..."
-    },    
+    },
     'de-de': {
         title: "Chat",
         send: "Senden",
@@ -259,7 +274,7 @@ const localizedStrings: LocalizedStrings = {
         consolePlaceholder: "Napište svou zprávu...",
         listeningIndicator: "Poslouchám..."
     }
-}
+};
 
 export const defaultStrings = localizedStrings['en-us'];
 
@@ -298,8 +313,10 @@ export const strings = (locale: string) => {
         locale = 'zh-hans';
     else if (locale.startsWith('cs'))
         locale = 'cs-cz';
+    else if (locale.startsWith('he'))
+        locale = 'he-il';
     else
         locale = 'en-us';
 
     return localizedStrings[locale];
-}
+};

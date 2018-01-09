@@ -10,7 +10,7 @@
         font-family: $fontFamily;
         font-size: $fontSize;
     }
-    
+
     // Remove blue thingy
     *{
         &:focus{
@@ -80,7 +80,7 @@
         right: 0;
         top: $headerTotalHeight;
         transition: transform $actionTransition;
-        
+
         &.no-header {
             top: 0;
         }
@@ -153,7 +153,7 @@
             top: 0;
             width: 28px;
         }
-        
+
         button.scroll:disabled {
             display: none;
         }
@@ -207,7 +207,7 @@
         left: 0;
         position: absolute;
         right: 0;
-        @include shellLinesAffect(height);     
+        @include shellLinesAffect(height);
     }
 
 /* views */
@@ -301,7 +301,8 @@
         color: $c_textLight;
         font-size: 11px;
         margin-top: 5px;
-        
+        direction: rtl;
+
         span{
             display: block;
             max-height: $fontSize + 5px; // Hack to get height to transition
@@ -321,7 +322,7 @@
         .non-adaptive-content {
             margin: $card_padding $card_padding 0 $card_padding;
         }
-        
+
         button {
             border-width: 1px;
             border-style: solid;
@@ -612,7 +613,7 @@
             .wc-adaptive-card p {
                 min-height: initial;
             }
-            
+
         }
     }
 
@@ -625,7 +626,7 @@
 
     .wc-message-from-me.wc-message-from {
         text-align: right;
-        
+
         a{
             color: $c06;
             text-decoration: underline !important;
@@ -664,7 +665,7 @@
     .wc-message-from-bot .wc-message-content {
         background-color: $c_messageFromThem;
         color: $c00;
-        
+
         a{
             color: $c00;
             text-decoration: underline !important;
@@ -712,10 +713,10 @@
     }
 
     .wc-console .wc-send {
-        right: 0;
+        left: 0;
         display: flex;
         align-items: center;
-        margin-right: 18px;
+        margin-left: 18px;
         height: 100%;
 
         &.hidden{
@@ -734,7 +735,7 @@
             display: flex;
             align-items: center;
             height: 100%;
-            right: 66px;
+            left: 66px;
         }
     }
 
@@ -744,8 +745,9 @@
 
     .wc-textbox {
         bottom: 0;
-        left: 18px;
-        right: 106px;
+        right: 18px;
+        left: 106px;
+        direction: rtl;
     }
 
     .wc-measurer{
@@ -755,7 +757,7 @@
     }
 
     .wc-mic {
-        right: 0;
+        left: 0;
     }
 
     .wc-mic.hidden {
@@ -765,13 +767,13 @@
     .wc-mic.active path#micFilling {
         fill:rgb(78, 55, 135)
     }
-    
+
     .wc-mic.inactive path#micFilling {
         visibility: hidden
     }
 
     .wc-console.has-text .wc-send svg {
-        fill: $c_brand; 
+        fill: $c_brand;
     }
 
     .wc-shellinput{
@@ -840,7 +842,7 @@
     .wc-app ::-webkit-scrollbar-thumb {
         background-color: $c_chrome;
     }
-  
+
     /* Notification modal */
 
     .notification-modal {
@@ -856,12 +858,12 @@
         border-radius: 4px;
         outline: none;
         padding: 20px;
-      
+
         display: flex;
         flex-direction: column;
         justify-content: space-between;
       }
-      
+
       .notification-modal-buttons{
         display: flex;
         flex-direction: row-reverse;

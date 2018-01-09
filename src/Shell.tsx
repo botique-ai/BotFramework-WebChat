@@ -142,7 +142,7 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
                     />
                 </div>
                 <label className={sendButtonClassName} onClick={this.onClickSend.bind(this)} >
-                    Send
+                  {this.props.strings.send}
                 </label>
 
                 <label className={micButtonClassName} onClick={ () => this.onClickMic() } >
