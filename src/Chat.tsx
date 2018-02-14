@@ -52,7 +52,6 @@ export class Chat extends React.Component<ChatProps, {}> {
     private chatviewPanel: HTMLElement;
     private resizeListener = () => this.setSize();
 
-    private _handleKeyDownCapture = this.handleKeyDownCapture.bind(this);
     private _saveShellRef = this.saveShellRef.bind(this);
 
     constructor(props: ChatProps) {
@@ -97,30 +96,6 @@ export class Chat extends React.Component<ChatProps, {}> {
             width: this.chatviewPanel.offsetWidth,
             height: this.chatviewPanel.offsetHeight
         });
-    }
-
-    private handleKeyDownCapture(evt: React.KeyboardEvent<HTMLDivElement>) {
-        const target = evt.target as HTMLElement;
-        const tabIndex = getTabIndex(target);
-
-        if (
-            target === findDOMNode(this.chatviewPanel)
-            || typeof tabIndex !== 'number'
-            || tabIndex < 0
-        ) {
-            evt.stopPropagation();
-
-            let key: string;
-
-            // Quirks: onKeyDown we re-focus, but the newly focused element does not receive the subsequent onKeyPress event
-            //         It is working in Chrome/Firefox/IE, confirmed not working in Edge/16
-            //         So we are manually appending the key if they can be inputted in the box
-            if (/(^|\s)Edge\/16\./.test(navigator.userAgent)) {
-                key = inputtableKey(evt.key);
-            }
-
-            this.focusShell(key);
-        }
     }
 
     private saveShellRef(shellWrapper: any) {
@@ -221,7 +196,6 @@ export class Chat extends React.Component<ChatProps, {}> {
             <Provider store={ this.store }>
                 <div
                     className="wc-chatview-panel"
-                    onKeyDownCapture={ this._handleKeyDownCapture }
                     ref={ div => this.chatviewPanel = div }
                     tabIndex={ 0 }
                 >
