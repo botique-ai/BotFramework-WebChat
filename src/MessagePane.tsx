@@ -8,6 +8,7 @@ import { classList, doCardAction, IDoCardAction } from './Chat';
 import * as konsole from './Konsole';
 import { ChatActions, sendMessage } from './Store';
 import { isRTL } from './helpers/isRTL';
+import { generateShellLineCountClass } from './helpers/generateShellLineCountClass';
 
 export interface MessagePaneProps {
     activityWithSuggestedActions: Message,
@@ -15,13 +16,14 @@ export interface MessagePaneProps {
     onSuggestedActionClick: (message: Message) => any,
 
     children: React.ReactNode,
-    doCardAction: IDoCardAction
+    doCardAction: IDoCardAction,
+    shellLines: number,
 }
 
 const MessagePaneView = (props: MessagePaneProps) =>
     <div className={ classList('wc-message-pane', props.activityWithSuggestedActions && 'show-actions' ) }>
         { props.children }
-        <div className="wc-suggested-actions">
+        <div className={`wc-suggested-actions ${generateShellLineCountClass(props.shellLines)}`}>
             <SuggestedActions { ... props }/>
         </div>
     </div>;
@@ -110,7 +112,8 @@ export const MessagePane = connect(
         // only used to create helper functions below
         botConnection: state.connection.botConnection,
         user: state.connection.user,
-        locale: state.format.locale
+        locale: state.format.locale,
+        shellLines: state.shell.lines
     }), {
         onSuggestedActionClick: (message: Message) => ({ type: 'Take_SuggestedAction', message } as ChatActions),
         // only used to create helper functions below
@@ -120,6 +123,7 @@ export const MessagePane = connect(
     }, (stateProps: any, dispatchProps: any, ownProps: any): MessagePaneProps => ({
         // from stateProps
         activityWithSuggestedActions: stateProps.activityWithSuggestedActions,
+        shellLines: stateProps.shellLines,
         // from dispatchProps
         onSuggestedActionClick: (activity) => {
             dispatchProps.onSuggestedActionClick(activity);

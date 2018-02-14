@@ -107,7 +107,8 @@
         position: absolute;
         right: 0;
         transition: height $actionTransition;
-
+        @include shellLinesAffect(bottom);
+        
         .wc-hscroll > ul {
             height: $actionsHeight;
             padding: 2px 3px;
