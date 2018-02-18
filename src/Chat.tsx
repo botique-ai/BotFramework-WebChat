@@ -28,7 +28,11 @@ export interface ChatProps {
     sendTyping?: boolean,
     formatOptions?: FormatOptions,
     newConversationAutoMessage?: string,
-    resize?: 'none' | 'window' | 'detect'
+    resize?: 'none' | 'window' | 'detect';
+    userMessagesStyle?: {
+      backgroundColor: string;
+      color: string;
+    }
 }
 
 import { History } from './History';
@@ -201,8 +205,8 @@ export class Chat extends React.Component<ChatProps, {}> {
                 >
                     { header }
                     <NotificationModal/>
-                    <MessagePane onSuggestedActionClick={() => this.focusShell()}>
-                        <History />
+                    <MessagePane onSuggestedActionClick={() => this.focusShell()} userMessagesStyle={this.props.userMessagesStyle}>
+                        <History userMessagesStyle={this.props.userMessagesStyle} />
                     </MessagePane>
                     <Shell ref={ this._saveShellRef } />
                     { resize }
@@ -262,7 +266,7 @@ export const doCardAction = (
         case "postBack":
             sendPostBack(botConnection, text, value, from, locale);
             break;
-        
+
         case "location":
             const position = await handleGeoLocation(showNotificationModal)
             if(position){

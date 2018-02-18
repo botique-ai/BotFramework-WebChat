@@ -27,7 +27,11 @@ export interface HistoryProps {
     isFromMe: (activity: Activity) => boolean,
     isSelected: (activity: Activity) => boolean,
     onClickActivity: (activity: Activity) => React.MouseEventHandler<HTMLDivElement>,
-    doCardAction: IDoCardAction
+    doCardAction: IDoCardAction;
+    userMessagesStyle?: {
+      backgroundColor: string;
+      color: string;
+    }
 }
 
 const LOAD_HISTORY_LIMIT = 10;
@@ -55,7 +59,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
         this.lastScrollHeight = this.scrollMe.scrollHeight;
         this.lastScrollTop = this.scrollMe.scrollTop;
     }
-    
+
     componentDidUpdate() {
         if (this.props.format.carouselMargin == undefined) {
             // After our initial render we need to measure the carousel width
@@ -151,7 +155,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                 this.largeWidth = this.props.size.width * 2;
                 content = <this.measurableCarousel/>;
             } else {
-                content = this.props.activities.map((activity, index) => 
+                content = this.props.activities.map((activity, index) =>
                     <WrappedActivity
                         format={ this.props.format }
                         key={ activity.channelData.clientActivityId }
@@ -167,6 +171,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                             e.stopPropagation();
                             this.props.onClickRetry(activity)
                         } }
+                        userMessagesStyle={this.props.userMessagesStyle}
                     >
                         <ActivityView
                             format={ this.props.format }
@@ -231,7 +236,9 @@ export const History = connect(
         onClickRetry: dispatchProps.onClickRetry,
         onClickCardAction: dispatchProps.onClickCardAction,
         onLoadHistory: dispatchProps.onLoadHistory,
-        
+
+        userMessagesStyle: ownProps.userMessagesStyle,
+
         // helper functions
         doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.format.locale, dispatchProps.sendMessage, dispatchProps.sendLocation, dispatchProps.showNotificationModal),
         isFromMe: (activity: Activity) => activity.from.id === stateProps.user.id,
@@ -269,7 +276,11 @@ export interface WrappedActivityProps {
     fromMe: boolean,
     format: FormatState,
     onClickActivity: React.MouseEventHandler<HTMLDivElement>,
-    onClickRetry: React.MouseEventHandler<HTMLAnchorElement>
+    onClickRetry: React.MouseEventHandler<HTMLAnchorElement>;
+    userMessagesStyle?: {
+      backgroundColor: string;
+      color: string;
+    }
 }
 
 export class WrappedActivity extends React.Component<WrappedActivityProps, {isFooterVisibleHover: boolean, isFooterVisibleClick: boolean}> {
@@ -284,7 +295,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
             isFooterVisibleHover: false,
             isFooterVisibleClick: false,
         }
-    }   
+    }
 
     componentWillUpdate(nextProps: WrappedActivityProps){
         this.detectRTL(nextProps.activity);
@@ -338,29 +349,32 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
             this.props.selected && 'selected',
             this.isRTL && 'rtl'
         );
-        
+
+        const contentStyle = who === "me" ? (this.props.userMessagesStyle || {}) : {};
+        const pathStyle = who === "me" ? (this.props.userMessagesStyle ? {fill: this.props.userMessagesStyle.backgroundColor} : {}) : {};
+
         return (
             <div data-activity-id={ this.props.activity.id } className={ wrapperClassName } onClick={ this.props.onClickActivity }>
-                <div 
+                <div
                     onMouseEnter={() => {
                         this.timestampTimerHandle = setTimeout(() => this.setState({isFooterVisibleHover: true}), 300)
-                    }} 
+                    }}
                     onMouseLeave={() => {
                         clearTimeout(this.timestampTimerHandle);
                         this.setState({isFooterVisibleHover: false}
-                    )}} 
+                    )}}
                     onMouseDown={() => {
                         clearTimeout(this.timestampTimerHandle);
                         this.setState({
                             isFooterVisibleClick: !this.state.isFooterVisibleClick,
                             isFooterVisibleHover: false,
                         })
-                    }} 
+                    }}
                     className={ 'wc-message wc-message-from-' + who } ref={ div => this.messageDiv = div }>
-                    <div className={ contentClassName }>
+                    <div className={ contentClassName } style={contentStyle}>
                         <svg className="wc-message-callout">
-                            <path className="point-left" d="m0,6 l6 6 v-12 z" />
-                            <path className="point-right" d="m6,6 l-6 6 v-12 z" />
+                            <path className="point-left" d="m0,6 l6 6 v-12 z" style={pathStyle} />
+                            <path className="point-right" d="m6,6 l-6 6 v-12 z" style={pathStyle} />
                         </svg>
                         { this.props.children }
                     </div>

@@ -18,6 +18,10 @@ export interface MessagePaneProps {
     children: React.ReactNode,
     doCardAction: IDoCardAction,
     shellLines: number,
+    userMessagesStyle?: {
+      backgroundColor: string;
+      color: string;
+    }
 }
 
 const MessagePaneView = (props: MessagePaneProps) =>
@@ -39,7 +43,7 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
         const activity = this.props.activityWithSuggestedActions;
         e.stopPropagation();
 
-        // Do card action can reject, 
+        // Do card action can reject,
         if(await this.props.doCardAction(cardAction.type, cardAction.value)){
             this.props.onSuggestedActionClick(activity);
         };
@@ -61,9 +65,9 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
             >
                 <ul>{ this.props.activityWithSuggestedActions.suggestedActions.actions.map((action, index) =>
                     <li key={ `${action.title}-${index}` }>
-                        { action.type === "location" ? 
-                            <LocationAction onClick={this.actionClick.bind(this)} cardAction={action}/> : 
-                            <TextAction onClick={this.actionClick.bind(this)} cardAction={action} />
+                        { action.type === "location" ?
+                            <LocationAction onClick={this.actionClick.bind(this)} cardAction={action}/> :
+                            <TextAction onClick={this.actionClick.bind(this)} cardAction={action} userMessagesStyle={this.props.userMessagesStyle} />
                         }
                     </li>
                 ) }</ul>
@@ -73,13 +77,18 @@ class SuggestedActions extends React.Component<MessagePaneProps, {}> {
 }
 
 interface CardActionPropTypes{
-    cardAction: CardAction, 
-    onClick: (e: React.MouseEvent<HTMLButtonElement>, cardAction: CardAction) => any
+    cardAction: CardAction,
+    onClick: (e: React.MouseEvent<HTMLButtonElement>, cardAction: CardAction) => any,
+    userMessagesStyle?: {
+      backgroundColor: string;
+      color: string;
+    }
 }
 
-const TextAction = ({cardAction, onClick}: CardActionPropTypes) => {
+const TextAction = ({cardAction, onClick, userMessagesStyle}: CardActionPropTypes) => {
+    const style = userMessagesStyle || {};
     return(
-        <button className={`${isRTL(cardAction.title) ? 'rtl' : ''}`} type="button" onClick={ e => onClick(e, cardAction) } title={ cardAction.title }>
+        <button className={`${isRTL(cardAction.title) ? 'rtl' : ''}`} style={style} type="button" onClick={ e => onClick(e, cardAction) } title={ cardAction.title }>
             { cardAction.title }
         </button>
     );
@@ -131,6 +140,7 @@ export const MessagePane = connect(
         },
         // from ownProps
         children: ownProps.children,
+        userMessagesStyle: ownProps.userMessagesStyle,
         // helper functions
         doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.locale, dispatchProps.sendMessage, dispatchProps.sendLocation, dispatchProps.showNotificationModal),
     })

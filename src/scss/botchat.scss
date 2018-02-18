@@ -10,7 +10,7 @@
         font-family: $fontFamily;
         font-size: $fontSize;
     }
-    
+
     // Remove blue thingy
     *{
         &:focus{
@@ -80,7 +80,7 @@
         right: 0;
         top: $headerTotalHeight;
         transition: transform $actionTransition;
-        
+
         &.no-header {
             top: 0;
         }
@@ -108,7 +108,7 @@
         right: 0;
         transition: height $actionTransition;
         @include shellLinesAffect(bottom);
-        
+
         .wc-hscroll > ul {
             height: $actionsHeight;
             padding: 2px 3px;
@@ -128,33 +128,31 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     width: 100%;
-                    border-width: 1px;
-                    border-color: $c_brand;
-                    border-style: solid;
                 }
 
                 button:hover {
-                    background-color: #fff;
-                    color: $c_brand;
+                    background-color: #fff !important;
+                    color: $c_brand !important;
                 }
 
                 button:active {
-                    background-color: $c_brand;
-                    color: $c01;
+                    background-color: $c_brand !important;
+                    color: $c01 !important;
                 }
             }
         }
 
         button.scroll {
-            background-color: $c11;
-            height: $actionsHeight;
+            background-color: #eee;
+            height: 35px;
             overflow: hidden;
             padding: 0;
             position: absolute;
-            top: 0;
+            top: 3px;
             width: 28px;
+            border-radius: 40%;
         }
-        
+
         button.scroll:disabled {
             display: none;
         }
@@ -164,7 +162,8 @@
         }
 
         button.scroll svg {
-            fill: $c01;
+            fill: $c00;
+            margin-top: -3px;
 
             //TODO: use proper svg coords in the path data
             path {
@@ -208,7 +207,7 @@
         left: 0;
         position: absolute;
         right: 0;
-        @include shellLinesAffect(height);     
+        @include shellLinesAffect(height);
     }
 
 /* views */
@@ -302,7 +301,7 @@
         color: $c_textLight;
         font-size: 11px;
         margin-top: 5px;
-        
+
         span{
             display: block;
             max-height: $fontSize + 5px; // Hack to get height to transition
@@ -322,7 +321,7 @@
         .non-adaptive-content {
             margin: $card_padding $card_padding 0 $card_padding;
         }
-        
+
         button {
             border-width: 1px;
             border-style: solid;
@@ -453,15 +452,15 @@
 
       .wc-card-hero-title{
         font-weight: 700;
-        height: 40px;
-        overflow: hidden;
+        height: 45px;
+        overflow: auto;
         margin-bottom: 8px;
       }
 
       .wc-card-hero-subtitle{
         color: $c_textLight;
         height: 60px;
-        overflow: hidden;
+        overflow: auto;
         margin-bottom: 8px;
       }
 
@@ -613,7 +612,7 @@
             .wc-adaptive-card p {
                 min-height: initial;
             }
-            
+
         }
     }
 
@@ -626,7 +625,7 @@
 
     .wc-message-from-me.wc-message-from {
         text-align: right;
-        
+
         a{
             color: $c06;
             text-decoration: underline !important;
@@ -635,7 +634,7 @@
 
     .wc-message-from-me .wc-message-content {
         background-color: $c_messageFromMe;
-        color: $c01 !important;
+        color: $c01;
 
         a{
             color: $c01 !important;
@@ -665,7 +664,7 @@
     .wc-message-from-bot .wc-message-content {
         background-color: $c_messageFromThem;
         color: $c00;
-        
+
         a{
             color: $c00;
             text-decoration: underline !important;
@@ -766,13 +765,13 @@
     .wc-mic.active path#micFilling {
         fill:rgb(78, 55, 135)
     }
-    
+
     .wc-mic.inactive path#micFilling {
         visibility: hidden
     }
 
     .wc-console.has-text .wc-send svg {
-        fill: $c_brand; 
+        fill: $c_brand;
     }
 
     .wc-shellinput{
@@ -841,7 +840,7 @@
     .wc-app ::-webkit-scrollbar-thumb {
         background-color: $c_chrome;
     }
-  
+
     /* Notification modal */
 
     .notification-modal {
@@ -857,12 +856,12 @@
         border-radius: 4px;
         outline: none;
         padding: 20px;
-      
+
         display: flex;
         flex-direction: column;
         justify-content: space-between;
       }
-      
+
       .notification-modal-buttons{
         display: flex;
         flex-direction: row-reverse;
