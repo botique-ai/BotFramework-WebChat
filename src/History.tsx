@@ -155,7 +155,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                 this.largeWidth = this.props.size.width * 2;
                 content = <this.measurableCarousel/>;
             } else {
-                content = this.props.activities.map((activity, index) =>
+                content =  this.props.activities.filter((v)=> v.type !== "event").map((activity, index) =>
                     <WrappedActivity
                         format={ this.props.format }
                         key={ activity.channelData.clientActivityId }
@@ -166,7 +166,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                         onClickActivity={ this.props.onClickActivity(activity) }
                         onClickRetry={ e => {
                             // Since this is a click on an anchor, we need to stop it
-                            // from trying to actually follow a (nonexistant) link
+                            // from trying to actually follow a (nonexistent) link
                             e.preventDefault();
                             e.stopPropagation();
                             this.props.onClickRetry(activity)

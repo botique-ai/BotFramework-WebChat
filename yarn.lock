@@ -3943,6 +3943,18 @@ rx@2.3.24:
   version "2.3.24"
   resolved "https://registry.npmjs.org/rx/-/rx-2.3.24.tgz#14f950a4217d7e35daa71bbcbe58eff68ea4b2b7"
 
+rxjs@5.3.3:
+  version "5.3.3"
+  resolved "https://registry.npmjs.org/rxjs/-/rxjs-5.3.3.tgz#dd2f95105f713d95f25b894cbe5f68a5f32c926c"
+  dependencies:
+    symbol-observable "^1.0.1"
+
+rxjs@^5.5.5:
+  version "5.3.3"
+  resolved "https://registry.npmjs.org/rxjs/-/rxjs-5.3.3.tgz#dd2f95105f713d95f25b894cbe5f68a5f32c926c"
+  dependencies:
+    symbol-observable "^1.0.1"
+
 safe-buffer@^5.0.1:
   version "5.1.1"
   resolved "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"

@@ -20,6 +20,15 @@ export const sendMessage = (text: string, from: User, locale: string) => ({
         timestamp: (new Date()).toISOString()
     }} as ChatActions);
 
+export const sendEvent = (eventName: string, value: any, from: User) => ({
+    type: 'Send_Message',
+    activity: {
+        type: "event",
+        name: eventName,
+        value,
+        from,
+    }} as ChatActions);
+
 export const showNotificationModal = (title: string, text: string, buttonText: string = "Ok") => ({
     type: 'Show_Modal',
     modalSettings: {

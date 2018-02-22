@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 
 import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes, GeneralEventType } from '@botique/botframework-directlinejs';
-import { createStore, ChatActions, sendMessage } from './Store';
+import { createStore, ChatActions, sendMessage, sendEvent } from './Store';
 import { Provider } from 'react-redux';
 import { SpeechOptions } from './SpeechOptions';
 import { Speech } from './SpeechModule';
@@ -78,6 +78,10 @@ export class Chat extends React.Component<ChatProps, {}> {
             Speech.SpeechRecognizer.setSpeechRecognizer(props.speechOptions.speechRecognizer);
             Speech.SpeechSynthesizer.setSpeechSynthesizer(props.speechOptions.speechSynthesizer);
         }
+    }
+
+    public sendEvent(eventName: string, value: any){
+        this.store.dispatch(sendEvent(eventName, value, this.props.user));
     }
 
     private handleIncomingActivity(activity: Activity) {
