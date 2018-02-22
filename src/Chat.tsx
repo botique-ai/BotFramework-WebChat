@@ -28,6 +28,10 @@ export interface ChatProps {
     sendTyping?: boolean,
     formatOptions?: FormatOptions,
     newConversationAutoMessage?: string,
+    referral?: {
+        eventName: string,
+        value: any,
+    },
     resize?: 'none' | 'window' | 'detect';
     userMessagesStyle?: {
       backgroundColor: string;
@@ -157,6 +161,10 @@ export class Chat extends React.Component<ChatProps, {}> {
             this.generalEventsSubscription = botConnection.generalEvents$.subscribe(event => {
                 if(event === GeneralEventType.InitConversationNew){
                     this.store.dispatch(sendMessage(this.props.newConversationAutoMessage, this.props.user, this.props.locale));
+                }
+
+                if(this.props.referral && event === GeneralEventType.InitConversationNew || event === GeneralEventType.InitConversationExisting){
+                    this.store.dispatch(sendEvent(this.props.referral.eventName, this.props.referral.value, this.props.user))
                 }
             })
         }
