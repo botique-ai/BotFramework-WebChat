@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
+import { sleep } from "./helpers/sleep";
 
 import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes, GeneralEventType } from '@botique/botframework-directlinejs';
 import { createStore, ChatActions, sendMessage, sendEvent } from './Store';
@@ -157,17 +158,16 @@ export class Chat extends React.Component<ChatProps, {}> {
             });
         }
 
-        if(this.props.newConversationAutoMessage){
-            this.generalEventsSubscription = botConnection.generalEvents$.subscribe(event => {
-                if(event === GeneralEventType.InitConversationNew){
-                    this.store.dispatch(sendMessage(this.props.newConversationAutoMessage, this.props.user, this.props.locale));
-                }
+        this.generalEventsSubscription = botConnection.generalEvents$.subscribe(async event => {
+            if(this.props.newConversationAutoMessage && event === GeneralEventType.InitConversationNew){
+                this.store.dispatch(sendMessage(this.props.newConversationAutoMessage, this.props.user, this.props.locale));
+                await sleep(1000) // TODO: This is super ugly but works until we can control message dispatch ordering
+            }
 
-                if(this.props.referral && event === GeneralEventType.InitConversationNew || event === GeneralEventType.InitConversationExisting){
-                    this.store.dispatch(sendEvent(this.props.referral.eventName, this.props.referral.value, this.props.user))
-                }
-            })
-        }
+            if(this.props.referral && event === GeneralEventType.InitConversationNew || event === GeneralEventType.InitConversationExisting){
+                this.store.dispatch(sendEvent(this.props.referral.eventName, this.props.referral.value, this.props.user))
+            }
+        })
     }
 
     componentWillUnmount() {
