@@ -164,7 +164,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                 await sleep(1000) // TODO: This is super ugly but works until we can control message dispatch ordering
             }
 
-            if(this.props.referral && event === GeneralEventType.InitConversationNew || event === GeneralEventType.InitConversationExisting){
+            if(this.props.referral && (event === GeneralEventType.InitConversationNew || event === GeneralEventType.InitConversationExisting)){
                 this.store.dispatch(sendEvent(this.props.referral.eventName, this.props.referral.value, this.props.user))
             }
         })

@@ -7,6 +7,7 @@ node_modules
 **/.vscode
 npm-debug.log*
 debug.log
+**/*.log
 test/src
 test/mock_dl/conversations.js*
 test/mock_dl/index.js*
