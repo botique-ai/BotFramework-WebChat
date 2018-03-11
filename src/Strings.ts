@@ -1,4 +1,5 @@
 export interface Strings {
+    __direction?: 'rtl' | 'ltr',
     title: string,
     send: string,
     unknownFile: string,
@@ -258,7 +259,23 @@ const localizedStrings: LocalizedStrings = {
         timeSent: " v %1",
         consolePlaceholder: "Napište svou zprávu...",
         listeningIndicator: "Poslouchám..."
-    }
+    },
+    'he-il': {
+        __direction: 'rtl',
+        title: "Chat",
+        send: "שלח",
+        unknownFile: "[קובץ מסוג '%1']",
+        unknownCard: "[כרטיס מידע לא יודע '%1']",
+        receiptVat: "מע״מ",
+        receiptTax: "מס",
+        receiptTotal: "סה״כ",
+        messageRetry: "שלח שוב",
+        messageFailed: "שליחת הודעה נכשלה",
+        messageSending: "שולח",
+        timeSent: " %1",
+        consolePlaceholder: "הקלד הודעה...",
+        listeningIndicator: "מאזין..."
+    },
 }
 
 export const defaultStrings = localizedStrings['en-us'];
@@ -298,6 +315,8 @@ export const strings = (locale: string) => {
         locale = 'zh-hans';
     else if (locale.startsWith('cs'))
         locale = 'cs-cz';
+    else if (locale.startsWith('he'))
+        locale = 'he-il';
     else
         locale = 'en-us';
 

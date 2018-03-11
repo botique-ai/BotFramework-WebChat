@@ -331,7 +331,7 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
             default:
                 let sent: string;
                 if (this.props.showTimestamp)
-                    sent = this.props.format.strings.timeSent.replace('%1', (new Date(this.props.activity.timestamp)).toLocaleString());
+                    sent = this.props.format.strings.timeSent.replace('%1', (new Date(this.props.activity.timestamp)).toLocaleString(this.props.format.locale));
                 timeLine = <span className={this.getFooterCollapseStyleClass()}>{ this.props.activity.from.name || this.props.activity.from.id }{ sent }</span>;
                 break;
         }

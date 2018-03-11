@@ -14,6 +14,7 @@ interface Props {
     strings: Strings,
     listening: boolean,
     lines: number;
+    languageDirection: 'rtl' | 'ltr',
 
     onChangeText: (inputText: string, lines: number) => void
 
@@ -118,15 +119,10 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
             this.props.listening && 'active',
             !this.props.listening && 'inactive',
         );
-
+        
         return (
-            <div className={`${className} ${generateShellLineCountClass(this.props.lines)}`}>
+            <div dir={this.props.languageDirection} className={`${className} ${generateShellLineCountClass(this.props.lines)}`}>
                 <input id="wc-upload-input" type="file" ref={ input => this.fileInput = input } onChange={ () => this.onChangeFile() } />
-                <label className="wc-upload" htmlFor="wc-upload-input">
-                    <div className="wc-upload-icon">
-                    📎
-                    </div>
-                </label>
                 <div className="wc-textbox">
                     <span className="wc-measurer" ref={(span) => this.widthMeasurer = span} />
                     <textarea
@@ -141,8 +137,13 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
                         placeholder={ this.props.listening ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder }
                     />
                 </div>
+                <label className="wc-upload" htmlFor="wc-upload-input">
+                    <div className="wc-upload-icon">
+                    📎
+                    </div>
+                </label>
                 <label className={sendButtonClassName} onClick={this.onClickSend.bind(this)} >
-                    Send
+                    {this.props.strings.send}
                 </label>
 
                 <label className={micButtonClassName} onClick={ () => this.onClickMic() } >
@@ -165,6 +166,7 @@ export const Shell = connect(
         strings: state.format.strings,
         // only used to create helper functions below
         locale: state.format.locale,
+        languageDirection: state.format.languageDirection,
         user: state.connection.user,
         listening : state.shell.listening
     }), {
@@ -181,6 +183,7 @@ export const Shell = connect(
         lines: stateProps.lines,
         strings: stateProps.strings,
         listening : stateProps.listening,
+        languageDirection: stateProps.languageDirection,
         // from dispatchProps
         onChangeText: dispatchProps.onChangeText,
         // helper functions

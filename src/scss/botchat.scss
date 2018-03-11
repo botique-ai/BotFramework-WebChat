@@ -685,10 +685,10 @@
 
 /* console */
 
-    .wc-console > * {
-        position: absolute;
-        top: 0;
-        vertical-align: middle;
+    .wc-console{
+        display: flex;
+        padding-left: 18px;
+        padding-right: 18px;
     }
 
     .wc-console label {
@@ -712,10 +712,8 @@
     }
 
     .wc-console .wc-send {
-        right: 0;
         display: flex;
         align-items: center;
-        margin-right: 18px;
         height: 100%;
 
         &.hidden{
@@ -723,7 +721,6 @@
         }
 
         &.enabled{
-          font-weight: 700;
           color: $c_brand;
         }
     }
@@ -734,7 +731,8 @@
             display: flex;
             align-items: center;
             height: 100%;
-            right: 66px;
+            margin-left: 9px;
+            margin-right: 9px;
         }
     }
 
@@ -743,9 +741,7 @@
     }
 
     .wc-textbox {
-        bottom: 0;
-        left: 18px;
-        right: 106px;
+        flex: 1 1;
     }
 
     .wc-measurer{
@@ -759,7 +755,7 @@
     }
 
     .wc-mic.hidden {
-        visibility: hidden
+        display: none;
     }
 
     .wc-mic.active path#micFilling {

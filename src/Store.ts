@@ -5,6 +5,7 @@ import { Speech } from './SpeechModule';
 import { ActivityOrID, FormatOptions } from './Types';
 import * as konsole from './Konsole';
 
+export const DEFAULT_LANGUAGE_DIRECTION = 'ltr';
 // Reducers - perform state transformations
 
 import { Reducer, compose } from 'redux';
@@ -179,6 +180,7 @@ export interface FormatState {
     options: FormatOptions,
     strings: Strings,
     carouselMargin: number
+    languageDirection: 'rtl' | 'ltr',
 }
 
 export type FormatAction = {
@@ -198,6 +200,7 @@ export const format: Reducer<FormatState> = (
         options: {
             showHeader: true
         },
+        languageDirection: DEFAULT_LANGUAGE_DIRECTION,
         strings: defaultStrings,
         carouselMargin: undefined
     },
@@ -213,10 +216,12 @@ export const format: Reducer<FormatState> = (
                 }
             };
         case 'Set_Locale':
+            const localeStrings = strings(action.locale);
             return {
                 ... state,
                 locale: action.locale,
-                strings: strings(action.locale),
+                strings: localeStrings,
+                languageDirection: localeStrings.__direction || DEFAULT_LANGUAGE_DIRECTION,
             };
         case 'Set_Measurements':
             return {
