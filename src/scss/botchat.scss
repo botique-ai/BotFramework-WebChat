@@ -496,12 +496,17 @@
 
     }
 
-/* alternate chat sizes */
-
     .wc-message {
-        max-width: 60%;
+        max-width: 90%;
     }
 
+    @media (min-width: 768px) {
+        .wc-message {
+            max-width: 55%;
+        }
+    }
+
+    /* alternate chat sizes */
     @include card-size($card_normal);
 
     .wc-wide {
