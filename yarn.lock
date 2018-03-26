@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@botique/botframework-directlinejs@^0.12.2":
-  version "0.12.2"
-  resolved "https://registry.npmjs.org/@botique/botframework-directlinejs/-/botframework-directlinejs-0.12.2.tgz#ed58377018c1b41c0abb34630a8c54c3b0cdaba8"
+"@botique/botframework-directlinejs@^0.12.3":
+  version "0.12.3"
+  resolved "https://registry.npmjs.org/@botique/botframework-directlinejs/-/botframework-directlinejs-0.12.3.tgz#b33a5f09173b90d4194395455c78cf3d75b2b360"
   dependencies:
     rxjs "^5.5.5"
 
@@ -3961,8 +3961,8 @@ rxjs@5.3.3:
     symbol-observable "^1.0.1"
 
 rxjs@^5.5.5:
-  version "5.5.6"
-  resolved "https://registry.npmjs.org/rxjs/-/rxjs-5.5.6.tgz#bf84391c30b4147010ef37015fb4f620be8ee65b65d5ad865f810d8cf5e0e928c363af429b1f6fe35d770bdf5ae30185d7a0a53efe59f26821b98a2b56483f92"
+  version "5.5.7"
+  resolved "https://registry.npmjs.org/rxjs/-/rxjs-5.5.7.tgz#1f1a3669cf204508f08ed2a0ba4308c0145bab9f8a01e115e615cce286d804e02085ebf8d5b0d05a0147e2cbd8894f549d0e64370c362e07f205d7af09dd875c"
   dependencies:
     symbol-observable "1.0.1"
 
