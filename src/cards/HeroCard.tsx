@@ -23,9 +23,11 @@ export class HeroCard extends React.Component<HeroCardPropTypes, null> {
 
   render() {
     return <div className={classList("wc-wide", "wc-card", "wc-card-hero", this.props.className)}>
-        <div className={`img-container ${this.props.imageRatio || 'horizontal'}`}>
+        {
+          this.props.image && <div className={`img-container ${this.props.imageRatio || 'horizontal'}`}>
           <img src={this.props.image} />
         </div>
+        }
         <div className="wc-card-hero-text-container">
           <div className="wc-card-hero-title">{this.props.title}</div>
           {this.props.subtitle && <div className="wc-card-hero-subtitle">
