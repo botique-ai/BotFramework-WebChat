@@ -72,17 +72,29 @@ class CarouselAttachments extends React.PureComponent<CarouselAttachmentProps, {
     render() {
         konsole.log("rendering CarouselAttachments");
         const { attachments, ... props } = this.props;
-        return (
-            <ul>{ this.props.attachments.map((attachment, index) =>
-                <li key={ index } className="wc-carousel-item">
-                    <AttachmentView
-                        attachment={ attachment }
-                        format={ props.format }
-                        onCardAction={ props.onCardAction }
-                        onImageLoad={ props.onImageLoad }
-                    />
-                </li>
-            ) }</ul>
-        );
+        if(this.props.attachments.length === 1){
+            return (
+                <AttachmentView
+                attachment={ this.props.attachments[0] }
+                format={ props.format }
+                onCardAction={ props.onCardAction }
+                onImageLoad={ props.onImageLoad }
+                isJumbo={true}
+            />
+            )
+        } else{
+            return (
+                <ul>{ this.props.attachments.map((attachment, index) =>
+                    <li key={ index } className="wc-carousel-item">
+                        <AttachmentView
+                            attachment={ attachment }
+                            format={ props.format }
+                            onCardAction={ props.onCardAction }
+                            onImageLoad={ props.onImageLoad }
+                        />
+                    </li>
+                ) }</ul>
+            );
+        }
     }
 }
