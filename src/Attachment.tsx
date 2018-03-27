@@ -172,7 +172,6 @@ export const AttachmentView = (props: {
                 attachment.content.images.forEach(img => heroCardBuilder.addImage(img.url));
             }
             heroCardBuilder.addCommon(attachment.content)
-            console.log('HERO ATT', attachment);
             //return <AdaptiveCardContainer className="hero" card={ heroCardBuilder.card } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } onClick={ onCardAction(attachment.content.tap) } />
             return <HeroCard title={attachment.content.title} subtitle={attachment.content.subtitle} buttons={attachment.content.buttons} imageRatio={attachment.content.imageRatio} image={attachment.content.images[0].url} onImageLoad={props.onImageLoad} onCardAction={props.onCardAction} onClick={onCardAction(attachment.content.tap)} className={props.isJumbo && 'jumbo'} />;
 
