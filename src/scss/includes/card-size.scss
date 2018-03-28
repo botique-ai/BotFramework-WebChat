@@ -5,16 +5,24 @@
         border: $card_borderWidth solid #d2dde5;
         width: $cardWidth - 2 * ($card_padding + $card_borderWidth);
 
-        &.jumbo{
-            width: (1.5 * $cardWidth) - 3 * ($card_padding + $card_borderWidth);
+        @media (min-width: 768px) {
+            &.jumbo{
+                width: 100%;
+                min-width: $cardWidth - 2 * ($card_padding + $card_borderWidth);
+                max-width: (1.5 * $cardWidth) - 3 * ($card_padding + $card_borderWidth);
+            }
         }
     }
 
     .wc-adaptive-card {
         width: $cardWidth - 2 * $card_borderWidth;
 
-        &.jumbo{
-            width: (1.5 * $cardWidth) - 3 * $card_borderWidth;
+        @media (min-width: 768px) {
+            &.jumbo{
+                width: 100%;
+                min-width: $cardWidth - 2 * ($card_padding + $card_borderWidth);
+                max-width: (1.5 * $cardWidth) - 3 * ($card_padding + $card_borderWidth);
+            }
         }
     }
     
