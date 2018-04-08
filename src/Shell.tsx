@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { ChatState, FormatState } from './Store';
+import {ChatState, FormatState, sendLocation, showNotificationModal} from './Store';
 import { User } from '@botique/botframework-directlinejs';
-import { classList } from './Chat';
+import {classList, doCardAction, IDoCardAction, sendPostBack} from './Chat';
 import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
 import { ChatActions, sendMessage, sendFiles } from './Store';
 import { generateShellLineCountClass } from './helpers/generateShellLineCountClass';
 import { isRTL } from './helpers/isRTL';
+import {ChatMenu, ChatMenuItem} from './ChatMenu';
+import { CardAction } from "@botique/botframework-directlinejs";
+import * as konsole from './Konsole';
 
 interface Props {
     inputText: string,
@@ -22,19 +25,28 @@ interface Props {
     sendFiles: (files: FileList) => void,
     stopListening: () => void,
     startListening: () => void
+
+    menu?: ChatMenu;
+    doCardAction: IDoCardAction;
 }
 
 export interface ShellFunctions {
     focus: (appendKey?: string) => void
 }
 
-class ShellContainer extends React.Component<Props, {}> implements ShellFunctions {
+class ShellContainer extends React.Component<Props, {
+  menuOpen: boolean;
+}> implements ShellFunctions {
     private textInput: HTMLTextAreaElement;
     private fileInput: HTMLInputElement;
     private widthMeasurer: HTMLSpanElement;
 
     constructor(props: Props) {
         super(props);
+
+        this.state = {
+          menuOpen: false
+        }
     }
 
     private measureLines(text: string){
@@ -96,7 +108,50 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
         const text = this.props.inputText + appendKey;
         if (appendKey) {
             this.props.onChangeText(text, this.measureLines(text));
+
         }
+    }
+
+    renderMenuItem(menuItem: ChatMenuItem): JSX.Element {
+      if ((menuItem as {subMenu: ChatMenu}).subMenu) {
+        return (
+          <div>
+            {menuItem.title}
+            {this.renderMenu((menuItem as {subMenu: ChatMenu}).subMenu)}
+          </div>
+        );
+      }
+      else {
+        menuItem = (menuItem as CardAction);
+        switch (menuItem.type) {
+          case "postBack": return (
+            <button
+              onClick={() => {
+                this.props.doCardAction((menuItem as CardAction).type, (menuItem as CardAction).value);
+                this.setState({menuOpen: false})}}>
+              {menuItem.title}
+            </button>
+          );
+          default: {
+            konsole.log(`Don't know how to render menu item of type ${menuItem.type}. Ignoring.`);
+            return null;
+          }
+        }
+      }
+    }
+
+    renderMenu(menu: ChatMenu) {
+      return (
+        <ul>
+          {
+            menu.map(menuItem => (
+              <li>
+                {this.renderMenuItem(menuItem)}
+              </li>
+            ))
+          }
+        </ul>
+      )
     }
 
     render() {
@@ -119,8 +174,21 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
             this.props.listening && 'active',
             !this.props.listening && 'inactive',
         );
-        
+
+        const consoleMenuClassName = classList(
+          'wc-console-menu',
+          this.state.menuOpen && 'open'
+        );
+
         return (
+          <div>
+            {
+              this.props.menu && (
+                <div className={consoleMenuClassName}>
+                  {this.renderMenu(this.props.menu)}
+                </div>
+              )
+            }
             <div dir={this.props.languageDirection} className={`${className} ${generateShellLineCountClass(this.props.lines)}`}>
                 <input id="wc-upload-input" type="file" ref={ input => this.fileInput = input } onChange={ () => this.onChangeFile() } />
                 <div className="wc-textbox">
@@ -137,8 +205,17 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
                         placeholder={ this.props.listening ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder }
                     />
                 </div>
-                <label className="wc-upload" htmlFor="wc-upload-input">
-                    <div className="wc-upload-icon">
+                <label className="wc-console-action" onClick={() => this.setState(state => ({menuOpen: !state.menuOpen}))}>
+                  {
+                    this.props.menu && (
+                      <div>
+                        ☰
+                      </div>
+                    )
+                  }
+                </label>
+                <label className="wc-console-action" htmlFor="wc-upload-input">
+                    <div>
                     📎
                     </div>
                 </label>
@@ -154,6 +231,7 @@ class ShellContainer extends React.Component<Props, {}> implements ShellFunction
                     </svg>
                 </label>
             </div>
+          </div>
         );
     }
 }
@@ -168,7 +246,9 @@ export const Shell = connect(
         locale: state.format.locale,
         languageDirection: state.format.languageDirection,
         user: state.connection.user,
-        listening : state.shell.listening
+        listening : state.shell.listening,
+
+        botConnection: state.connection.botConnection,
     }), {
         // passed down to ShellContainer
         onChangeText: (input: string, lines: number) => ({ type: 'Update_Input', input, lines, source: "text" } as ChatActions),
@@ -176,7 +256,9 @@ export const Shell = connect(
         startListening:  () => ({ type: 'Listening_Starting' }),
         // only used to create helper functions below
         sendMessage,
-        sendFiles
+        sendLocation,
+        sendFiles,
+        showNotificationModal
     }, (stateProps: any, dispatchProps: any, ownProps: any): Props => ({
         // from stateProps
         inputText: stateProps.inputText,
@@ -190,7 +272,9 @@ export const Shell = connect(
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
         startListening: () => dispatchProps.startListening(),
-        stopListening: () => dispatchProps.stopListening()
+        stopListening: () => dispatchProps.stopListening(),
+        menu: ownProps.menu,
+        doCardAction: doCardAction(stateProps.botConnection, stateProps.user, stateProps.locale, dispatchProps.sendMessage, dispatchProps.sendLocation, dispatchProps.showNotificationModal)
     }), {
         withRef: true
     }

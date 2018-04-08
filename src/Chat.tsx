@@ -17,6 +17,7 @@ import { ActivityOrID, FormatOptions } from './Types';
 import * as konsole from './Konsole';
 import { getTabIndex } from './getTabIndex';
 import { NotificationModal } from './NotificationModal';
+import { ChatMenu } from './ChatMenu';
 
 export interface ChatProps {
     user: User,
@@ -37,7 +38,8 @@ export interface ChatProps {
     userMessagesStyle?: {
       backgroundColor: string;
       color: string;
-    }
+    };
+    menu?: ChatMenu;
 }
 
 import { History } from './History';
@@ -220,7 +222,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                     <MessagePane onSuggestedActionClick={() => this.focusShell()} userMessagesStyle={this.props.userMessagesStyle}>
                         <History userMessagesStyle={this.props.userMessagesStyle} />
                     </MessagePane>
-                    <Shell ref={ this._saveShellRef } />
+                    <Shell ref={ this._saveShellRef } menu={this.props.menu}/>
                     { resize }
                 </div>
             </Provider>
