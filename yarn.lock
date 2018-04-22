@@ -98,14 +98,14 @@
     redux "^3.6.0"
 
 "@types/react@*":
-  version "16.3.11"
-  resolved "https://registry.npmjs.org/@types/react/-/react-16.3.11.tgz#17466a565755ea5ec539b44f7e48178381b05896b8b46ae1d60972766c7e38c39d5382b99549e1dab963ff8b8ee919ee376381542ce8d978b22227c464f9025f"
+  version "16.3.12"
+  resolved "https://registry.npmjs.org/@types/react/-/react-16.3.12.tgz#15f0612c2dd07975c4b63a0618b8b14bb701df4e6fcc138cd5d64ab5b52e5de4df8d8d2abb3451331a6aca50b843251a2ea76134b74447465d1d418056519208"
   dependencies:
     csstype "^2.2.0"
 
-"@types/react@^16.3.11":
-  version "16.3.11"
-  resolved "https://registry.npmjs.org/@types/react/-/react-16.3.11.tgz#17466a565755ea5ec539b44f7e48178381b05896b8b46ae1d60972766c7e38c39d5382b99549e1dab963ff8b8ee919ee376381542ce8d978b22227c464f9025f"
+"@types/react@^16.3.12":
+  version "16.3.12"
+  resolved "https://registry.npmjs.org/@types/react/-/react-16.3.12.tgz#15f0612c2dd07975c4b63a0618b8b14bb701df4e6fcc138cd5d64ab5b52e5de4df8d8d2abb3451331a6aca50b843251a2ea76134b74447465d1d418056519208"
   dependencies:
     csstype "^2.2.0"
 
@@ -987,8 +987,8 @@ css2json@0.0.4:
   resolved "https://registry.npmjs.org/css2json/-/css2json-0.0.4.tgz#b79829681337085599a9db105d557118182543f7"
 
 csstype@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.npmjs.org/csstype/-/csstype-2.2.0.tgz#e581d642002dcca200f2daebd80560e89ab916ce5e011d54a8a6d126381041ebcdc77200843dd2f706a3bea25d98eedb808c72d0c03994554fcc962398c94d79"
+  version "2.3.0"
+  resolved "https://registry.npmjs.org/csstype/-/csstype-2.3.0.tgz#fa2a307fe1db614295eb9f878c0857931e0a1fa205a48c670653b499a2ac5e60481c95c49dd6934583d52f8a44c2d2bafb5cd1be45e8f960f5b5114aca030742"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -3511,9 +3511,9 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.2.0:
-  version "16.2.0"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.2.0.tgz#ce91807701d59fd2b4d3dd5dfa1afe474aab8e827ce1c20114bdae53ad0abd604f7d9ecb3d2adfaaf893c461d6374b233d96f68715b331ec70aef25d29e3ef8e"
+react-dom@^16.3.2:
+  version "16.3.2"
+  resolved "https://registry.npmjs.org/react-dom/-/react-dom-16.3.2.tgz#30c3e4a37cd89dc36bcffee01b5ef02565111190efb246475cec1bb6dce5d05d0bdf00e64e8cae113ba8febf18e72bc37a3c18711c9623596f5418cb25617028"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -3540,9 +3540,9 @@ react-redux@5.0.5:
     loose-envify "^1.1.0"
     prop-types "^15.5.10"
 
-react@^16.2.0:
-  version "16.2.0"
-  resolved "https://registry.npmjs.org/react/-/react-16.2.0.tgz#66622898cec41350ef3c49d21401d99fd56cf73265e40f47ede9741064c4e996d6f4529eff5e0860094f6c2f221f6e586ab110c592fe13c556ecc8bb91f42b0d"
+react@^16.3.2:
+  version "16.3.2"
+  resolved "https://registry.npmjs.org/react/-/react-16.3.2.tgz#a3918f76485c890ddc12987aaa0bd807b2d3387c3f181d2a448e9914dba08f8f6a24215f807c15363679bbe6fb9e27f8bce78c20eb988f709e61ed88043ef896"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
