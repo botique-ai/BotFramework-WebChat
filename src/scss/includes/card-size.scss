@@ -2,7 +2,7 @@
 @mixin card-size($cardWidth) {
 
     .wc-card {
-        border: $card_borderWidth solid #d2dde5;
+        //border: $card_borderWidth solid #d2dde5;
         width: $cardWidth - 2 * ($card_padding + $card_borderWidth);
 
         @media (min-width: 768px) {

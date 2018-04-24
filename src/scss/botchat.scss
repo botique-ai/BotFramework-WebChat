@@ -316,8 +316,6 @@
 
     .wc-card {
 
-        background-color: $c01;
-
         .non-adaptive-content {
             margin: $card_padding $card_padding 0 $card_padding;
         }
@@ -326,7 +324,7 @@
             border-width: 1px;
             border-style: solid;
             border-radius: $element-border-radius;
-            background-color: transparent;
+            background-color: $c01;
             color: $c_brand;
             min-height: 32px;
             width: 100%;
@@ -337,7 +335,7 @@
         }
 
         button:hover {
-            background-color: transparent;
+            background-color: $c01;
             border-color: $c_brand;
             color: $c_brand;
         }
