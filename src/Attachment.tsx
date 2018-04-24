@@ -4,6 +4,7 @@ import { Attachment, CardAction, KnownMedia, UnknownMedia } from '@botique/botfr
 import { renderIfNonempty, IDoCardAction } from './Chat';
 import { FormatState } from './Store';
 import { HeroCard } from './cards/HeroCard';
+import { ButtonsCard } from "./cards/ButtonsCard";
 import { AdaptiveCardContainer } from './AdaptiveCardContainer';
 import * as konsole from './Konsole';
 
@@ -165,16 +166,11 @@ export const AttachmentView = (props: {
 
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
-            if (!attachment.content)
+            if (!attachment.content){
                 return null;
-            const heroCardBuilder = new CardBuilder.AdaptiveCardBuilder();
-            if (attachment.content.images) {
-                attachment.content.images.forEach(img => heroCardBuilder.addImage(img.url));
+            } else {
+                return <HeroCard title={attachment.content.title} subtitle={attachment.content.subtitle} buttons={attachment.content.buttons} imageRatio={attachment.content.imageRatio} image={attachment.content.images[0].url} onImageLoad={props.onImageLoad} onCardAction={props.onCardAction} onClick={onCardAction(attachment.content.tap)} className={props.isJumbo && 'jumbo'} />;
             }
-            heroCardBuilder.addCommon(attachment.content)
-            //return <AdaptiveCardContainer className="hero" card={ heroCardBuilder.card } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } onClick={ onCardAction(attachment.content.tap) } />
-            return <HeroCard title={attachment.content.title} subtitle={attachment.content.subtitle} buttons={attachment.content.buttons} imageRatio={attachment.content.imageRatio} image={attachment.content.images[0].url} onImageLoad={props.onImageLoad} onCardAction={props.onCardAction} onClick={onCardAction(attachment.content.tap)} className={props.isJumbo && 'jumbo'} />;
-
         case "application/vnd.microsoft.card.thumbnail":
             if (!attachment.content)
                 return null;
@@ -292,11 +288,11 @@ export const AttachmentView = (props: {
             );
 
         case "application/vnd.microsoft.card.adaptive":
-            if (!attachment.content)
+            if (!attachment.content){
                 return null;
-            return (
-                <AdaptiveCardContainer card={ attachment.content } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } />
-            );
+            } else {
+                return <ButtonsCard text={attachment.content.body[0].text} buttons={attachment.content.actions} onCardAction={props.onCardAction}/>
+            }
 
         // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
         case "application/vnd.microsoft.card.flex":

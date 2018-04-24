@@ -331,6 +331,9 @@
             min-height: 32px;
             width: 100%;
             padding: 0 16px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         button:hover {
@@ -443,7 +446,7 @@
         }
     }
 
-    // TODO: make hero-card support wc-wide and wc-narrow
+    // Hero card
     .wc-card-hero{
       .wc-card-hero-text-container{
         text-align: center;
@@ -495,6 +498,26 @@
       }
 
     }
+
+    // Buttons card
+    .wc-card-buttons{
+        .wc-card-buttons-text-container{
+          //text-align: center;
+          padding: 8px;
+        }
+  
+        .wc-card-buttons-text{
+          text-align: left;
+          overflow: auto;
+          margin-bottom: 8px;
+        }
+  
+        .wc-card-buttons-buttons{
+          button{
+              margin-bottom: 8px;
+          }
+        }
+      }
 
     .wc-message {
         max-width: 90%;
