@@ -7,7 +7,7 @@
   "scripts": {
     "build-test": "tsc -p ./test/mock_dl && tsc -p ./test && tsc -p ./test/mock_speech",
     "build-test-watch": "concurrently \"tsc -w -p ./test/mock_dl\" \"tsc -w -p ./test\"",
-    "build-css": "node-sass ./src/scss/ -o . && rimraf ./includes/",
+    "build-css": "node-sass ./src/scss/ --include-path ./node_modules -o . && rimraf ./includes/",
     "build-ac-config": "ac-scss2json ./src/scss/includes/adaptive-card-config.scss > adaptivecards-hostconfig.json",
     "build-all-style": "npm run build-css && npm run build-ac-config && webpack",
     "build": "npm run build-css && tsc && webpack --progress",
@@ -28,11 +28,12 @@
   "author": "Microsoft Corp",
   "license": "MIT",
   "dependencies": {
-    "@botique/botframework-directlinejs": "^0.12.3",
+    "@botique/botframework-directlinejs": "^0.13.0",
     "core-js": "2.4.1",
     "markdown-it": "8.3.1",
     "microsoft-adaptivecards": "0.6.1",
     "microsoft-speech-browser-sdk": "0.0.1",
+    "rc-collapse": "^1.9.0",
     "react-modal": "^3.1.7",
     "react-redux": "5.0.5",
     "redux": "3.7.2",

@@ -11,7 +11,7 @@
             "es2017"
         ],
         "module": "commonjs",
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "outDir": "./built/",
         "target": "es5",
         "sourceMap": true,

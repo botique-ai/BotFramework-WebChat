@@ -5,6 +5,7 @@ import { renderIfNonempty, IDoCardAction } from './Chat';
 import { FormatState } from './Store';
 import { HeroCard } from './cards/HeroCard';
 import { ButtonsCard } from "./cards/ButtonsCard";
+import { ListCard } from "./cards/ListCard";
 import { AdaptiveCardContainer } from './AdaptiveCardContainer';
 import * as konsole from './Konsole';
 
@@ -171,6 +172,12 @@ export const AttachmentView = (props: {
             } else {
                 return <HeroCard title={attachment.content.title} subtitle={attachment.content.subtitle} buttons={attachment.content.buttons} imageRatio={attachment.content.imageRatio} image={attachment.content.images[0].url} onImageLoad={props.onImageLoad} onCardAction={props.onCardAction} onClick={onCardAction(attachment.content.tap)} className={props.isJumbo && 'jumbo'} />;
             }
+        case "application/vnd.botique.card.list":
+        if (!attachment.content){
+            return null;
+        } else {
+            return <ListCard title={attachment.content.title} items={attachment.content.items} onCardAction={props.onCardAction}/>
+        }
         case "application/vnd.microsoft.card.thumbnail":
             if (!attachment.content)
                 return null;

@@ -1,3 +1,4 @@
+@import "includes/vendor";
 @import "includes/colors";
 @import "includes/settings";
 @import "includes/mixins";
@@ -100,6 +101,7 @@
     }
 
     .wc-suggested-actions {
+        border-width: 0;
         bottom: $consoleHeight;
         height: 0;
         left: 0;
@@ -120,8 +122,8 @@
 
                 button {
                     border-radius: 30px;
-                    background-color: $c_brand;
-                    color: white;
+                    background-color: #fff;
+                    color: $c_brand;
                     min-height: 32px;
                     overflow: hidden;
                     padding: 0 16px;
@@ -131,8 +133,8 @@
                 }
 
                 button:hover {
-                    background-color: #fff !important;
-                    color: $c_brand !important;
+                    background-color: $c_brand !important;
+                    color: white !important;
                 }
 
                 button:active {
@@ -265,7 +267,7 @@
 
     .wc-message-content {
         border-radius: $element-border-radius;
-        box-shadow: 0px 1px 1px 0px $c_shadow;
+        //box-shadow: 0px 1px 1px 0px $c_shadow;
         padding: 8px;
         word-break: break-word;
         text-align: left;
