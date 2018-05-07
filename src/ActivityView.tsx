@@ -17,7 +17,7 @@ const Attachments = (props: {
     const { attachments, attachmentLayout, ... otherProps } = props;
     if (!attachments || attachments.length === 0)
         return null;
-    return attachmentLayout === 'carousel' ?
+    return attachmentLayout === 'carousel' && (attachments.length > 1) ?
         <Carousel
             attachments={ attachments }
             { ... otherProps }
