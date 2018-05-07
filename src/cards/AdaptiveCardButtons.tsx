@@ -11,7 +11,7 @@ export const AdaptiveCardButtons = ({
   buttons,
   onButtonClick
 }: AdaptiveCardButtonsPropTypes) => (
-  <>
+  <div className="adaptive-card-buttons">
     {buttons.map(button => (
       <button
         key={button.title}
@@ -24,5 +24,5 @@ export const AdaptiveCardButtons = ({
         {button.title}
       </button>
     ))}
-  </>
+  </div>
 );

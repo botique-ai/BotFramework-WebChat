@@ -48,12 +48,10 @@ export class HeroCard extends React.Component<HeroCardPropTypes, null> {
             <div className="wc-card-hero-subtitle">{this.props.subtitle}</div>
           )}
           {this.props.buttons && (
-            <div className="wc-card-hero-buttons">
-              <AdaptiveCardButtons
-                buttons={this.props.buttons}
-                onButtonClick={this.props.onCardAction}
-              />
-            </div>
+            <AdaptiveCardButtons
+              buttons={this.props.buttons}
+              onButtonClick={this.props.onCardAction}
+            />
           )}
         </div>
       </div>

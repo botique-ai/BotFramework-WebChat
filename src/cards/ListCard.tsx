@@ -34,7 +34,13 @@ export class ListCard extends React.Component<ListCardPropTypes, null> {
           <Collapse accordion={true}>
             {this.props.items.map((listCardItem: ListCardItem, i) => (
               <Panel key={i} header={listCardItem.title}>
-                {listCardItem.text}
+                <div className="wc-card-list-item-text">{listCardItem.text}</div>
+                {listCardItem.buttons && (
+                  <AdaptiveCardButtons
+                    buttons={listCardItem.buttons}
+                    onButtonClick={this.props.onCardAction}
+                  />
+                )}
               </Panel>
             ))}
           </Collapse>

@@ -33,12 +33,10 @@ export class ButtonsCard extends React.Component<ButtonsCardPropTypes, null> {
             </DirectionDetector>
           )}
 
-          <div className="wc-card-buttons-buttons">
-            <AdaptiveCardButtons
-              buttons={this.props.buttons}
-              onButtonClick={this.props.onCardAction}
-            />
-          </div>
+          <AdaptiveCardButtons
+            buttons={this.props.buttons}
+            onButtonClick={this.props.onCardAction}
+          />
         </div>
       </div>
     );
