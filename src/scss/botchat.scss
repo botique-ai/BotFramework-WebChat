@@ -682,7 +682,9 @@ body .wc-app,
 }
 
 .wc-message-from-me .wc-message-content {
-  background-color: $c_messageFromMe;
+  &.bubble{
+    background-color: $c_messageFromMe;
+  }
   color: $c01;
 
   a {
@@ -711,7 +713,10 @@ body .wc-app,
 }
 
 .wc-message-from-bot .wc-message-content {
-  background-color: $c_messageFromThem;
+
+  &.bubble{
+    background-color: $c_messageFromThem;
+  }
   color: $c00;
 
   a {

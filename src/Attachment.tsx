@@ -18,6 +18,10 @@ const YOUTUBE_WWW_SHORT_DOMAIN = "www.youtu.be";
 const VIMEO_DOMAIN = "vimeo.com";
 const VIMEO_WWW_DOMAIN = "www.vimeo.com";
 
+export const NON_BUBBLE_ATTACHMENT_TYPES = [
+    "application/vnd.botique.card.list"
+]
+
 export interface QueryParams {
     [propName: string]: string;
 }

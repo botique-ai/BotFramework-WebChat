@@ -9,6 +9,7 @@ import { sendMessage } from './Store';
 import { Spinner } from './Spinner';
 import { isRTL } from './helpers/isRTL';
 import {generateShellLineCountClass} from './helpers/generateShellLineCountClass';
+import { NON_BUBBLE_ATTACHMENT_TYPES } from './Attachment';
 
 export interface HistoryProps {
     format: FormatState,
@@ -286,11 +287,13 @@ export interface WrappedActivityProps {
 export class WrappedActivity extends React.Component<WrappedActivityProps, {isFooterVisibleHover: boolean, isFooterVisibleClick: boolean}> {
     public messageDiv: HTMLDivElement;
     private isRTL: boolean = false;
+    private isBubbleWrapped: boolean = true;
     private timestampTimerHandle: any;
 
     constructor(props: WrappedActivityProps) {
         super(props);
         this.detectRTL(props.activity);
+        this.detectBubble(props.activity);
         this.state = {
             isFooterVisibleHover: false,
             isFooterVisibleClick: false,
@@ -299,11 +302,22 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
 
     componentWillUpdate(nextProps: WrappedActivityProps){
         this.detectRTL(nextProps.activity);
+        this.detectBubble(nextProps.activity);
     }
 
     detectRTL(activity: Activity){
         if(activity.type === 'message' && activity.text){
             this.isRTL = isRTL(activity.text)
+        }
+    }
+
+    detectBubble(activity: Activity){
+        if(activity.type === 'message' && activity.attachments && activity.attachments.length > 0 && activity.attachments.every(
+            ({contentType}) => NON_BUBBLE_ATTACHMENT_TYPES.indexOf(contentType) > -1
+        )){
+            this.isBubbleWrapped = false;
+        } else {
+            this.isBubbleWrapped = true;
         }
     }
 
@@ -347,7 +361,8 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
         const contentClassName = classList(
             'wc-message-content',
             this.props.selected && 'selected',
-            this.isRTL && 'rtl'
+            this.isRTL && 'rtl',
+            this.isBubbleWrapped && 'bubble'
         );
 
         const contentStyle = who === "me" ? (this.props.userMessagesStyle || {}) : {};
@@ -372,10 +387,13 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
                     }}
                     className={ 'wc-message wc-message-from-' + who } ref={ div => this.messageDiv = div }>
                     <div className={ contentClassName } style={contentStyle}>
+                    {
+                       this.isBubbleWrapped &&
                         <svg className="wc-message-callout">
                             <path className="point-left" d="m0,6 l6 6 v-12 z" style={pathStyle} />
                             <path className="point-right" d="m6,6 l-6 6 v-12 z" style={pathStyle} />
                         </svg>
+                    }
                         { this.props.children }
                     </div>
                 </div>
