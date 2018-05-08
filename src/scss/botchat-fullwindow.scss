@@ -4,16 +4,9 @@
 
 // TODO: HOW CAN WE CREATE A FULL WIDTH CARD?
 @media (max-width: 450px) {
-  @include card-size($card_narrow);
   .notification-modal{
     width: 100%;
     height: 300px;
     transform: translateY(-150px);
   }
 }
-
-// This is from the orig repo but it just looks
-// weird
-// @media (min-width: 768px) {
-//   @include card-size($card_wide);
-// }

@@ -538,11 +538,11 @@ body .wc-app,
   max-width: 90%;
 }
 
-@media (min-width: 768px) {
-  .wc-message {
-    max-width: 55%;
-  }
-}
+// @media (min-width: 768px) {
+//   .wc-message {
+//     max-width: 55%;
+//   }
+// }
 
 /* alternate chat sizes */
 @include card-size($card_normal);
@@ -551,9 +551,9 @@ body .wc-app,
   @include card-size($card_wide);
 }
 
-.wc-narrow {
-  @include card-size($card_narrow);
-}
+// .wc-narrow {
+//   @include card-size($card_narrow);
+// }
 
 /* adaptive card adjustments from wc-card */
 .wc-adaptive-card {
