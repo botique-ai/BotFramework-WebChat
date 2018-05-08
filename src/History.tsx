@@ -161,7 +161,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                         format={ this.props.format }
                         key={ activity.channelData.clientActivityId }
                         activity={ activity }
-                        showTimestamp={ true }
+                        showTimestamp={ index === this.props.activities.length - 1 || (index + 1 < this.props.activities.length && suitableInterval(activity, this.props.activities[index + 1])) }
                         selected={ this.props.isSelected(activity) }
                         fromMe={ this.props.isFromMe(activity) }
                         onClickActivity={ this.props.onClickActivity(activity) }
@@ -284,7 +284,7 @@ export interface WrappedActivityProps {
     }
 }
 
-export class WrappedActivity extends React.Component<WrappedActivityProps, {isFooterVisibleHover: boolean, isFooterVisibleClick: boolean}> {
+export class WrappedActivity extends React.Component<WrappedActivityProps, null> {
     public messageDiv: HTMLDivElement;
     private isRTL: boolean = false;
     private isBubbleWrapped: boolean = true;
@@ -294,10 +294,6 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
         super(props);
         this.detectRTL(props.activity);
         this.detectBubble(props.activity);
-        this.state = {
-            isFooterVisibleHover: false,
-            isFooterVisibleClick: false,
-        }
     }
 
     componentWillUpdate(nextProps: WrappedActivityProps){
@@ -321,15 +317,11 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
         }
     }
 
-    getFooterCollapseStyleClass(){
-        return(`${this.state.isFooterVisibleClick || this.state.isFooterVisibleHover ? '' : ' collapsed'}`);
-    }
-
     render () {
         let timeLine: JSX.Element;
         switch (this.props.activity.id) {
             case undefined:
-                timeLine = <span className={this.getFooterCollapseStyleClass()}>{ this.props.format.strings.messageSending }</span>;
+                timeLine = <span>{ this.props.format.strings.messageSending }</span>;
                 break;
             case null:
                 timeLine = <span>{ this.props.format.strings.messageFailed }</span>;
@@ -344,9 +336,23 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
                 break;
             default:
                 let sent: string;
-                if (this.props.showTimestamp)
-                    sent = this.props.format.strings.timeSent.replace('%1', (new Date(this.props.activity.timestamp)).toLocaleString(this.props.format.locale));
-                timeLine = <span className={this.getFooterCollapseStyleClass()}>{ this.props.activity.from.name || this.props.activity.from.id }{ sent }</span>;
+                if (this.props.showTimestamp){
+                    const activityDate = new Date(this.props.activity.timestamp);
+                    const today = (new Date());
+                    today.setHours(0, 0, 0, 0);
+                    if(this.props.showTimestamp){
+                        const stringFormatOptions = (activityDate < today) ? {
+                            day: '2-digit',
+                            month: '2-digit',
+                            hour: '2-digit', 
+                            minute:'2-digit'
+                        } : {
+                            hour: '2-digit', 
+                            minute:'2-digit'
+                        }
+                        timeLine = <span>{ activityDate.toLocaleString(this.props.format.locale, stringFormatOptions) }</span>;
+                    }
+                }
                 break;
         }
 
@@ -371,20 +377,6 @@ export class WrappedActivity extends React.Component<WrappedActivityProps, {isFo
         return (
             <div data-activity-id={ this.props.activity.id } className={ wrapperClassName } onClick={ this.props.onClickActivity }>
                 <div
-                    onMouseEnter={() => {
-                        this.timestampTimerHandle = setTimeout(() => this.setState({isFooterVisibleHover: true}), 300)
-                    }}
-                    onMouseLeave={() => {
-                        clearTimeout(this.timestampTimerHandle);
-                        this.setState({isFooterVisibleHover: false}
-                    )}}
-                    onMouseDown={() => {
-                        clearTimeout(this.timestampTimerHandle);
-                        this.setState({
-                            isFooterVisibleClick: !this.state.isFooterVisibleClick,
-                            isFooterVisibleHover: false,
-                        })
-                    }}
                     className={ 'wc-message wc-message-from-' + who } ref={ div => this.messageDiv = div }>
                     <div className={ contentClassName } style={contentStyle}>
                     {

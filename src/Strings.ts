@@ -10,7 +10,7 @@ export interface Strings {
     messageRetry: string,
     messageFailed: string,
     messageSending: string,
-    timeSent: string,
+    
     consolePlaceholder: string,
     listeningIndicator: string
 }
@@ -31,7 +31,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "retry",
         messageFailed: "couldn't send",
         messageSending: "sending",
-        timeSent: " at %1",
+        
         consolePlaceholder: "Type your message...",
         listeningIndicator: "Listening..."
     },
@@ -46,7 +46,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "prøv igjen",
         messageFailed: "kunne ikke sende",
         messageSending: "sender",
-        timeSent: " %1",
+        
         consolePlaceholder: "Skriv inn melding...",
         listeningIndicator: "Lytter..."
     },    
@@ -61,7 +61,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "wiederholen",
         messageFailed: "konnte nicht senden",
         messageSending: "sendet",
-        timeSent: " am %1",
+        
         consolePlaceholder: "Verfasse eine Nachricht...",
         listeningIndicator: "Hören..."
     },
@@ -76,7 +76,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "wyślij ponownie",
         messageFailed: "wysłanie nieudane",
         messageSending: "wysyłanie",
-        timeSent: " o %1",
+        
         consolePlaceholder: "Wpisz swoją wiadomość...",
         listeningIndicator: "Słuchający..."
     },
@@ -91,7 +91,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "повторить",
         messageFailed: "не удалось отправить",
         messageSending: "отправка",
-        timeSent: " в %1",
+        
         consolePlaceholder: "Введите ваше сообщение...",
         listeningIndicator: "прослушивание..."
     },
@@ -106,7 +106,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "opnieuw",
         messageFailed: "versturen mislukt",
         messageSending: "versturen",
-        timeSent: " om %1",
+        
         consolePlaceholder: "Typ je bericht...",
         listeningIndicator: "het luisteren..."
     },
@@ -121,7 +121,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "Mēģināt vēlreiz",
         messageFailed: "Neizdevās nosūtīt",
         messageSending: "Nosūtīšana",
-        timeSent: " %1",
+        
         consolePlaceholder: "Ierakstiet savu ziņu...",
         listeningIndicator: "Klausoties..."
     },
@@ -136,7 +136,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "repetir",
         messageFailed: "não pude enviar",
         messageSending: "enviando",
-        timeSent: " às %1",
+        
         consolePlaceholder: "Digite sua mensagem...",
         listeningIndicator: "Ouvindo..."
     },
@@ -151,7 +151,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "reéssayer",
         messageFailed: "envoi impossible",
         messageSending: "envoi",
-        timeSent: " à %1",
+        
         consolePlaceholder: "Écrivez votre message...",
         listeningIndicator: "Écoute..."
     },
@@ -166,7 +166,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "reintentar",
         messageFailed: "no enviado",
         messageSending: "enviando",
-        timeSent: " a las %1",
+        
         consolePlaceholder: "Escribe tu mensaje...",
         listeningIndicator: "Escuchando..."
     },
@@ -181,7 +181,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "δοκιμή",
         messageFailed: "αποτυχία",
         messageSending: "αποστολή",
-        timeSent: " την %1",
+        
         consolePlaceholder: "Πληκτρολόγηση μηνύματος...",
         listeningIndicator: "Ακούγοντας..."
     },
@@ -196,7 +196,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "riprova",
         messageFailed: "impossibile inviare",
         messageSending: "invio",
-        timeSent: " il %1",
+        
         consolePlaceholder: "Scrivi il tuo messaggio...",
         listeningIndicator: "Ascoltando..."
     },
@@ -211,7 +211,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "重试",
         messageFailed: "无法发送",
         messageSending: "正在发送",
-        timeSent: " 用时 %1",
+        
         consolePlaceholder: "输入你的消息...",
         listeningIndicator: "正在倾听..."
     },
@@ -226,7 +226,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "重試",
         messageFailed: "無法發送",
         messageSending: "正在發送",
-        timeSent: " 於 %1",
+        
         consolePlaceholder: "輸入你的訊息...",
         listeningIndicator: "正在聆聽..."
     },
@@ -241,7 +241,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "再嚟一次",
         messageFailed: "傳送唔倒",
         messageSending: "而家傳送緊",
-        timeSent: " 喺 %1",
+        
         consolePlaceholder: "輸入你嘅訊息...",
         listeningIndicator: "聽緊你講嘢..."
     },
@@ -256,7 +256,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "opakovat",
         messageFailed: "nepodařilo se odeslat",
         messageSending: "Odesílání",
-        timeSent: " v %1",
+        
         consolePlaceholder: "Napište svou zprávu...",
         listeningIndicator: "Poslouchám..."
     },
@@ -272,7 +272,7 @@ const localizedStrings: LocalizedStrings = {
         messageRetry: "שלח שוב",
         messageFailed: "שליחת הודעה נכשלה",
         messageSending: "שולח",
-        timeSent: " %1",
+        
         consolePlaceholder: "הקלד הודעה...",
         listeningIndicator: "מאזין..."
     },
