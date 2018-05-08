@@ -15,15 +15,22 @@ const Attachments = (props: {
     onImageLoad: () => void
 }) => {
     const { attachments, attachmentLayout, ... otherProps } = props;
-    if (!attachments || attachments.length === 0)
+    if (!attachments || attachments.length === 0){
         return null;
-    return attachmentLayout === 'carousel' && (attachments.length > 1) ?
-        <Carousel
+    } else if (attachments.length === 1){
+        return <AttachmentView
+            attachment={ attachments[0] }
+            format={ props.format }
+            onCardAction={ props.onCardAction }
+            onImageLoad={ props.onImageLoad }
+        />
+    } else if (attachmentLayout === 'carousel'){
+        return <Carousel
             attachments={ attachments }
             { ... otherProps }
         />
-    : 
-        <div className="wc-list">
+    } else{
+        return <div className="wc-list">
             { attachments.map((attachment, index) =>
                 <AttachmentView
                     key={ index }
@@ -34,6 +41,7 @@ const Attachments = (props: {
                 />
             ) }
         </div>
+    }
 }
 
 export interface ActivityViewProps {
