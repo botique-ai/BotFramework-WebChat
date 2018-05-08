@@ -316,15 +316,6 @@ body .wc-app,
   color: $c_textLight;
   font-size: 11px;
   margin-top: 5px;
-
-  span {
-    display: block;
-    max-height: $fontSize + 5px; // Hack to get height to transition
-    transition: max-height $actionTransition;
-    &.collapsed {
-      max-height: 0px;
-    }
-  }
 }
 
 /* cards */

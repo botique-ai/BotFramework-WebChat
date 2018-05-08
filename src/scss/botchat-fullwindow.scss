@@ -2,6 +2,7 @@
 @import "includes/settings";
 @import "includes/card-size";
 
+// TODO: HOW CAN WE CREATE A FULL WIDTH CARD?
 @media (max-width: 450px) {
   @include card-size($card_narrow);
   .notification-modal{
